@@ -1,0 +1,187 @@
+var express = require('express'),
+    app = express(),
+    http = require('http').Server(app),
+    io = require('socket.io')(http);
+
+var CookieParser = require('cookie-parser');
+var ECT = require('ect');
+var ectRenderer = ECT({ watch: true, root: __dirname + '/views', ext : '.ect' });
+var validator = require('validator');
+
+app.use(express.static('public'));
+app.use(CookieParser());
+app.engine('ect', ectRenderer.render);
+app.set('view engine', 'ect');
+
+var async = require('async');
+
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema;
+
+var UserSchema = new Schema({
+  socketid: String,
+  name: String
+});
+mongoose.model('User', UserSchema);
+var User;
+
+var LogSchema = new Schema({
+  name: String,
+  msg: String,
+  date: Date
+});
+LogSchema.pre('save', function(next){
+  this.date = new Date();
+  next();
+});
+mongoose.model('Log', LogSchema);
+var Log;
+
+mongoose.connect('mongodb://localhost/chatdb');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("Connected to 'chatdb' database");
+  User = mongoose.model('User');
+  User.remove({});
+  Log = mongoose.model('Log');
+  Log.remove({});
+});
+
+app.get('/', function(req, res){
+  res.render('index', {name: req.cookies.name});
+});
+
+app.post('/users/:name', function(req, res){
+  var name = validator.escape(req.params.name);
+  var query = User.where({name: name});
+  query.findOne().lean().exec(function(err, result){
+    if (result !== null){
+      res.status(400).json({type: "error", msg: "すでにその名前は使われています"});
+    } else {
+      res.status(200).cookie('name', name).json({type: "OK"});
+    }
+  });
+});
+
+var updateMemberList = function(socket, io){
+  var listquery = User.where({}).select('name');
+  listquery.find().lean().exec(function(err, result){
+    if (err) {
+      socket.emit('system', "DB接続エラーです。管理者に問い合わせて下さい");
+    } else {
+      io.emit('member list', result);
+    }
+  });
+};
+
+io.on('connection', function(socket){
+  updateMemberList(socket, io);
+
+  var logquery = Log.where({});
+  logquery.find().lean().exec(function(err, result){
+    if (err) {
+      socket.emit('system', "DB接続エラーです。管理者に問い合わせて下さい");
+    } else {
+      socket.emit('chat logs', result);
+    }
+  });
+
+  socket.on('enter room', function(name){
+    name = validator.escape(name);
+    if (name === '') {
+      socket.emit('system', "名前に空白は利用できません");
+      return;
+    }
+
+    var query = User.where({name: name});
+    query.findOne().lean().exec(function(err, result){
+      if (result !== null){
+        return;
+      }
+    });
+
+    var newUser = new User({socketid: socket.id.toString(),
+                            name: name});
+    newUser.save(function(err, result){
+      if (err) {
+        socket.emit('system', "DB接続エラーです。管理者に問い合わせて下さい");
+      } else if (result === null){
+        socket.emit('system', "おっと、チャットルームに入室できていないかもしれません。ページをリロードしてみてください。");
+      } else {
+        var today = new Date();
+        // io.emit('chat message',
+        //         { name: 'System', msg: result.name + 'さんが入室しました',
+        //           date: today});
+        // var newLog = new Log({name: result.name, msg: result.name + 'さんが入室しました',
+        //                       date: today});
+        // newLog.save();
+        updateMemberList(socket, io);
+      }
+    });
+  });
+
+  socket.on('chat message', function(msg){
+    msg = validator.escape(msg);
+    if (msg === '') {
+      socket.emit('system', "メッセージに空白は利用できません");
+      return;
+    }
+
+    var query = User.where({socketid: socket.id.toString()});
+    query.findOne().lean().exec(function(err, result){
+      if (err) {
+        socket.emit('system', "DB接続エラーです。管理者に問い合わせて下さい");
+      } else if (result === null){
+        socket.emit('system', "おっと、チャットルームに入室できていないかもしれません。ページをリロードしてみてください。");
+      } else {
+        io.emit('chat message', { name: result.name, msg: msg});
+        var newLog = new Log({name: result.name, msg: msg});
+        newLog.save();
+      }
+    });
+  });
+
+  socket.on('disconnect', function(){
+    var query = User.where({socketid: socket.id.toString()});
+    query.findOneAndRemove().lean().exec(function(err, result){
+      if (err) {
+        socket.emit('system', "DB接続エラーです。管理者に問い合わせて下さい");
+      } else if (result === null){
+        socket.emit('system', "おっと、チャットルームに入室できていないかもしれません。ページをリロードしてみてください。");
+      } else {
+        var today = new Date();
+        // io.emit('chat message',
+        //         { name: 'System', msg: result.name + 'さんが退室しました',
+        //           date: today});
+        // var newLog = new Log({name: result.name, msg: result.name + 'さんが退室しました',
+        //                       date: today});
+        // newLog.save();
+        updateMemberList(socket, io);
+      }
+    });
+  });
+});
+
+http.listen(3000, function(){
+  console.log('listening on *:3000');
+});
+
+process.on('SIGINT', function () {
+  console.log('CAUGHT SIGINT');
+  async.series([
+    function(cb) {
+      io.close();
+      cb(null, "io close");
+    },
+    function(cb) {
+      User.remove({});
+      cb(null, "User remove");
+    }], function(err, results) {
+      if (err) {
+        console.log("Has Error!");
+      }
+      console.log(results);
+      process.exit();
+    });
+});

@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Chat</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+    <link href="/style/style.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div class="flash" id="flash"></div>
+    <form id="enterForm" class="enter-dialog">
+      <input id="name" autocomplete="off"
+             placeholder="あなたの名前" value="<%= @name %>"/>
+      <button>入室</button>
+    </form>
+    <div class="enter-dialog" id="layer"></div>
+
+    <ul id="messages"></ul>
+    <ul id="members"></ul>
+    <form action="" id="chatForm">
+      <input id="m" autocomplete="off"
+             placeholder="メッセージを入力して下さい"
+             /><button>Send</button>
+    </form>
+
+
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script src="/js/send.js"></script>
+  </body>
+</html>
