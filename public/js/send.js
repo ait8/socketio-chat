@@ -60,5 +60,6 @@ socket.on('system', function(msg){
 $('form#chatForm').submit(function(){
   socket.emit('chat message', $('#m').val());
   $('#m').val('');
+  $('form#chatForm #m').focus();
   return false;
 });
