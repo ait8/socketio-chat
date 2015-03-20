@@ -52,6 +52,10 @@ app.get('/', function(req, res){
   res.render('index', {name: req.cookies.name});
 });
 
+app.get('/readonly', function(req, res){
+  res.render('readonly');
+});
+
 app.post('/users/:name', function(req, res){
   var name = validator.escape(req.params.name);
   var query = User.where({name: name});
