@@ -28,6 +28,7 @@ var User;
 var LogSchema = new Schema({
   name: String,
   msg: String,
+  tag: String,
   date: Date
 });
 LogSchema.pre('save', function(next){
@@ -127,9 +128,15 @@ io.on('connection', function(socket){
 
   socket.on('chat message', function(msg){
     msg = validator.escape(msg);
+    var msgClass = "msg";
+
     if (msg === '') {
       socket.emit('system', "メッセージに空白は利用できません");
       return;
+    } else {
+      if (msg.match(/質問|question/i)) {
+        msgClass = "msg question";
+      }
     }
 
     var query = User.where({socketid: socket.id.toString()});
@@ -139,8 +146,8 @@ io.on('connection', function(socket){
       } else if (result === null){
         socket.emit('system', "おっと、チャットルームに入室できていないかもしれません。ページをリロードしてみてください。");
       } else {
-        io.emit('chat message', { name: result.name, msg: msg});
-        var newLog = new Log({name: result.name, msg: msg});
+        io.emit('chat message', { name: result.name, msg: msg, tag: msgClass});
+        var newLog = new Log({name: result.name, msg: msg, tag: msgClass});
         newLog.save();
       }
     });

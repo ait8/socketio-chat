@@ -122,6 +122,14 @@ form button {
   padding-left: 10px;
 }
 
+#messages li span.question {
+  font-weight: bold;
+  color: #E22;
+  display: inline-block;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
 .flash {
   z-index: 10010;
   display: none;

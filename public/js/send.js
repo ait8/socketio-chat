@@ -21,11 +21,20 @@ $('form#enterForm').submit(function(){
 });
 
 socket.on('chat message', function(msg){
+  var bottoms = false;
+  if ($('#messages')[0].scrollHeight ===
+      $('#messages').scrollTop() + $('#messages').height() + 20) {
+    bottoms = true;
+  }
+  var tag = msg.tag || "msg";
+  var chatmsg = '<span class="' + tag + '">'+ msg.msg +'</span>';
   $('<li>'+
-    '  <span class="name">'+ msg.name +'</span>'+
-    '  <span class="msg">'+ msg.msg +'</span>'+
+    '  <span class="name">'+ msg.name +':</span>'+
+    chatmsg +
     '</li>').appendTo('#messages').hide().fadeIn(300);
+  if (bottoms) {
     $('#messages').scrollTop($('#messages')[0].scrollHeight);
+  }
 });
 
 socket.on('member list', function(msg){
@@ -38,9 +47,11 @@ socket.on('member list', function(msg){
 
 socket.on('chat logs', function(msg){
   for (var i = 0; i < msg.length; i++) {
+    var tag = msg[i].tag || "msg";
+    var chatmsg = '<span class="' + tag + '">'+ msg[i].msg +'</span>';
     $('#messages').append($('<li>'+
                              '  <span class="name">'+ msg[i].name +'</span>'+
-                             '  <span class="msg">'+ msg[i].msg +'</span>'+
+                             chatmsg+
                             '</li>')).scrollTop($('#messages')[0].scrollHeight);
   }
 
