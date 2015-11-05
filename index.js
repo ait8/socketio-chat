@@ -44,9 +44,13 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   console.log("Connected to 'chatdb' database");
   User = mongoose.model('User');
-  User.remove({});
+  User.remove({}, function(err) {
+    console.log('Reflesh User');
+    if (err) {
+      console.log(err);
+    }
+  });
   Log = mongoose.model('Log');
-  Log.remove({});
 });
 
 app.get('/', function(req, res){
@@ -176,23 +180,4 @@ io.on('connection', function(socket){
 
 http.listen(3000, function(){
   console.log('listening on *:3000');
-});
-
-process.on('SIGINT', function () {
-  console.log('CAUGHT SIGINT');
-  async.series([
-    function(cb) {
-      io.close();
-      cb(null, "io close");
-    },
-    function(cb) {
-      User.remove({});
-      cb(null, "User remove");
-    }], function(err, results) {
-      if (err) {
-        console.log("Has Error!");
-      }
-      console.log(results);
-      process.exit();
-    });
 });
