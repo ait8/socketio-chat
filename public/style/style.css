@@ -77,7 +77,7 @@ html, body {
   display: inline-block;
 }
 
-.messages li span.question {
+.messages li p.question {
   font-weight: bold;
   color: #E22;
 }
