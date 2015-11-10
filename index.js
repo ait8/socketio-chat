@@ -55,7 +55,7 @@ db.once('open', function() {
 });
 
 app.get('/', function(req, res){
-  res.render('index', {name: req.cookies.name});
+  res.render('chat', {name: req.cookies.name});
 });
 
 app.get('/readonly', function(req, res){

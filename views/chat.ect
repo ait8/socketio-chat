@@ -1,0 +1,18 @@
+<% extend 'layout.ect' %>
+
+<form id="enterForm" class="enter-dialog">
+  <input id="name" autocomplete="off"
+         placeholder="あなたの名前" value="<%= @name %>"/>
+  <button>入室</button>
+</form>
+
+<div class="enter-dialog" id="layer"></div>
+
+<ul id="messages"></ul>
+<ul id="members"></ul>
+
+<form action="" id="chatForm">
+  <input id="m" autocomplete="off"
+         placeholder="メッセージを入力して下さい"
+  /><button>Send</button>
+</form>
