@@ -22,8 +22,9 @@ $('form#enterForm').submit(function(){
 
 socket.on('chat message', function(msg){
   var bottoms = false;
-  if ($('#messages')[0].scrollHeight ===
-      $('#messages').scrollTop() + $('#messages').height() + 20) {
+  if ($('#messages')[0].scrollHeight <=
+      $('#messages').scrollTop() + $('#messages').height() + 20 ){
+                 // || $('.readonly').length === 1) {
     bottoms = true;
   }
   var tag = msg.tag || "msg";
