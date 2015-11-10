@@ -25,7 +25,7 @@ var createMessage = function(msg) {
   var tag = msg.tag || "msg";
   var time = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
         .format(new Date(msg.date));
-  var chatmsg = '<span class="' + tag + '">'+ msg.msg +'</span>';
+  var chatmsg = '<p class="' + tag + '">'+ msg.msg +'</p>';
   return $('<li>'+
            '  <span class="name">'+ msg.name +'<span class="time">'+ time +'</span></span>'+
            chatmsg +
