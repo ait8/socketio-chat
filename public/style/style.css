@@ -42,25 +42,25 @@ html, body {
 }
 
 
-#messages {
+.messages {
   margin: 0;
   margin-bottom: 45px;
   list-style-type: none;
   padding: 10px;
 }
 
-#messages li {
+.messages li {
   padding: 2px 0px;
   color: #34495E;
 }
 
-#messages li span.name {
+.messages li span.name {
   font-size: 0.7rem;
   font-weight: bolder;
   display: block;
 }
 
-#messages li span.time {
+.messages li span.time {
   font-weight: normal;
   font-size: 0.7rem;
   padding-left: 5px;
@@ -68,12 +68,12 @@ html, body {
   vertical-align: middle;
 }
 
-#messages li p.msg {
+.messages li p.msg {
   font-size: 1rem;
   display: inline-block;
 }
 
-#messages li span.question {
+.messages li span.question {
   font-weight: bold;
   color: #E22;
 }

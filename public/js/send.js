@@ -21,7 +21,6 @@ $('form#enterForm').submit(function(){
 });
 
 var createMessage = function(msg) {
-  console.log(msg);
   var tag = msg.tag || "msg";
   var time = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
         .format(new Date(msg.date));
@@ -34,14 +33,14 @@ var createMessage = function(msg) {
 
 socket.on('chat message', function(msg){
   var bottoms = false;
-  if ($('#messages')[0].scrollHeight <=
-      $('#messages').scrollTop() + $('#messages').height() + 20 ){
-                 // || $('.readonly').length === 1) {
+  if ($('#message-box').height() <=
+      $('body').scrollTop() + $('body').height()){
+        // || $('.readonly').length === 1) {
     bottoms = true;
   }
-  createMessage(msg).appendTo('#messages').hide().fadeIn(300);
+  createMessage(msg).appendTo('.messages').hide().fadeIn(300);
   if (bottoms) {
-    $('#messages').scrollTop($('#messages')[0].scrollHeight);
+    $('body').scrollTop($('.messages')[0].scrollHeight);
   }
 });
 
@@ -55,7 +54,8 @@ socket.on('member list', function(msg){
 
 socket.on('chat logs', function(msg){
   for (var i = 0; i < msg.length; i++) {
-    $('#messages').append(createMessage(msg[i])).scrollTop($('#messages')[0].scrollHeight);
+    $('.messages').append(createMessage(msg[i]));
+    $('body').scrollTop($('.messages')[0].scrollHeight);
   }
 
 });
