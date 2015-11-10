@@ -106,28 +106,25 @@ form button {
 #messages li {
   position: relative;
   bottom: 0;
-  padding: 10px 15px;
+  padding: 10px 10px;
   border-bottom: 1px solid rgb(189, 195, 199);
+  color: #34495E;
 }
 
 #messages li span.name {
-  font-size: 80%;
+  font-size: 70%;
   font-weight: bold;
   display: block;
 }
 
 #messages li span.msg {
   display: inline-block;
-  padding-top: 10px;
-  padding-left: 10px;
 }
 
 #messages li span.question {
   font-weight: bold;
   color: #E22;
   display: inline-block;
-  padding-top: 10px;
-  padding-left: 10px;
 }
 
 .flash {
