@@ -1,5 +1,6 @@
 var socket = io();
 var member_html = '<span></span>';
+var question_list = [];
 
 $('form#enterForm #name').focus();
 
@@ -22,14 +23,19 @@ $('form#enterForm').submit(function(){
 });
 
 var createMessage = function(msg) {
+  if (msg.question) {
+    question_list.push({id: msg._id, content: msg.msg.substr(0, 15) + '……'});
+  }
+
   var tag = msg.tag || "msg";
   var time = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
         .format(new Date(msg.date));
   var chatmsg = '<p class="' + tag + '">'+ msg.msg +'</p>';
-  return $('<li>'+
+  return $('<li id="'+ msg._id +'">'+
            '  <span class="name">'+ msg.name +'<span class="time">'+ time +'</span></span>'+
            chatmsg +
            '</li>');
+
 };
 
 socket.on('chat message', function(msg){
@@ -84,4 +90,26 @@ $('form#chatForm').submit(function(){
 $('.btn-user').popover({content: function(){return member_html;},
                         placement: 'left',
                         html: true,
-                        container: 'body'});
+                        container: 'body',
+                        trigger: 'focus'});
+
+$('.btn-question').popover({
+  content: function(){
+    var html = '';
+    for (var i = 0; i < question_list.length; i++) {
+      html += '<a href="#'+ question_list[i].id +'" class="questions">' + question_list[i].content + '</a>';
+    }
+    return html;
+  },
+  placement: 'left',
+  html: true,
+  container: 'body',
+  trigger: 'focus'});
+
+$('body').on('shown.bs.popover', function(event){
+  $('.messages li').removeClass('question-flash');
+  $('.questions').on('click', function(event){
+    var target = $(this).attr('href');
+    $(target).addClass('question-flash');
+  });
+});

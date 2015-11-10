@@ -158,3 +158,34 @@ html, body {
   content: "●";
   padding-right: 5px;
 }
+
+.questions {
+  display: block;
+}
+
+.question-flash {
+  opacity: 1;
+  -webkit-animation-duration: 1s;
+  -webkit-animation-name: flash;
+  animation-duration: 1s;
+  animation-name: flash;
+}
+
+@-webkit-keyframes flash {
+  0% {
+    background: #F9BF3B;
+    opacity: .4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes flash {
+  0% {
+    background: #F9BF3B;
+    opacity: .4;
+  }
+  100% {
+    opacity: 1;
+  }
+}
