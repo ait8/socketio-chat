@@ -49,6 +49,10 @@ html, body {
   padding: 10px;
 }
 
+#readonly {
+  margin: 0;
+}
+
 .messages li {
   padding: 2px 0px;
   color: #34495E;
