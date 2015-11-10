@@ -8,13 +8,13 @@ html, body {
   position: fixed;
   width: 100%;
   height: 100%;
-  z-index: 10000;
+  z-index: 1000;
   background: rgba(255, 255, 255, 0.65);
 }
 
 #enterForm {
   border-radius: 2px;
-  z-index: 10001;
+  z-index: 1001;
   background: #FFF;
   box-shadow:rgba(113, 135, 164, 0.65) 0px 0px 6px 3px;
   padding: 10px;
@@ -79,7 +79,7 @@ html, body {
 }
 
 .flash {
-  z-index: 10010;
+  z-index: 1010;
   display: none;
   position: fixed;
   bottom: px;
@@ -95,4 +95,62 @@ html, body {
 
 .hide {
   display: none;
+}
+
+.tool-box {
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  z-index: 1009;
+  vertical-align: middle;
+
+}
+
+.tool-box .num{
+  display: block;
+  font-size: 0.3rem;
+}
+
+.btn-circle {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 6px;
+}
+
+.tool-box .btn {
+  background: #FFF;
+  box-shadow:rgba(113, 135, 164, 0.25) 0px 0px 3px 2px;
+  outline: none;
+}
+
+.btn-user {
+  background: #FFF;
+  color: #89C4F4;
+}
+
+.btn-user:hover {
+  color: #FFF;
+  background: #89C4F4;
+}
+
+.btn-question {
+  background: #FFF;
+  color: #CF000F;
+}
+
+.btn-question:hover {
+  color: #FFF;
+  background: #CF000F;
+}
+
+.member {
+  padding: 1px;
+}
+
+.member:before {
+  color: #87D37C;
+  content: "●";
+  padding-right: 5px;
 }

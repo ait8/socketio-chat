@@ -1,4 +1,5 @@
 var socket = io();
+var member_html = '<span></span>';
 
 $('form#enterForm #name').focus();
 
@@ -46,10 +47,12 @@ socket.on('chat message', function(msg){
 
 socket.on('member list', function(msg){
   $('#members').html('');
-
+  var members = '';
   for (var i = 0; i < msg.length; i++) {
-    $('<li>').text(msg[i].name).appendTo('#members').hide().fadeIn(300);
+    members += '<div class="member">' + msg[i].name + '</div>';
   }
+  $('.btn-user .num').html(msg.length);
+  member_html = members;
 });
 
 socket.on('chat logs', function(msg){
@@ -77,3 +80,8 @@ $('form#chatForm').submit(function(){
   $('form#chatForm #m').focus();
   return false;
 });
+
+$('.btn-user').popover({content: function(){return member_html;},
+                        placement: 'left',
+                        html: true,
+                        container: 'body'});
