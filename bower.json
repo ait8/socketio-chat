@@ -1,0 +1,23 @@
+{
+  "name": "socket-chat-example",
+  "description": "my first socket.io app",
+  "main": "index.js",
+  "authors": [
+    "Shuhei TAKASUGI"
+  ],
+  "license": "MIT",
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5"
+  }
+}
