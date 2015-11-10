@@ -5,7 +5,7 @@
 }
 
 html, body {
-  font: 13px Meiryo, Helvetica, Arial;
+  font: Meiryo, Helvetica, Arial;
   min-height: 100%;
 }
 
@@ -115,6 +115,13 @@ form button {
   font-size: 70%;
   font-weight: bold;
   display: block;
+}
+
+#messages li span.time {
+  font-size: 70%;
+  padding-left: 5px;
+  color: #afbccd;
+  vertical-align: middle;
 }
 
 #messages li span.msg {

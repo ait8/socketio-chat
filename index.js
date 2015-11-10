@@ -150,9 +150,10 @@ io.on('connection', function(socket){
       } else if (result === null){
         socket.emit('system', "おっと、チャットルームに入室できていないかもしれません。ページをリロードしてみてください。");
       } else {
-        io.emit('chat message', { name: result.name, msg: msg, tag: msgClass});
         var newLog = new Log({name: result.name, msg: msg, tag: msgClass});
-        newLog.save();
+        newLog.save(function(){
+          io.emit('chat message', newLog);
+        });
       }
     });
   });

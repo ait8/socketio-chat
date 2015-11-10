@@ -20,6 +20,18 @@ $('form#enterForm').submit(function(){
   return false;
 });
 
+var createMessage = function(msg) {
+  console.log(msg);
+  var tag = msg.tag || "msg";
+  var time = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
+        .format(new Date(msg.date));
+  var chatmsg = '<span class="' + tag + '">'+ msg.msg +'</span>';
+  return $('<li>'+
+           '  <span class="name">'+ msg.name +'<span class="time">'+ time +'</span></span>'+
+           chatmsg +
+           '</li>');
+};
+
 socket.on('chat message', function(msg){
   var bottoms = false;
   if ($('#messages')[0].scrollHeight <=
@@ -27,12 +39,7 @@ socket.on('chat message', function(msg){
                  // || $('.readonly').length === 1) {
     bottoms = true;
   }
-  var tag = msg.tag || "msg";
-  var chatmsg = '<span class="' + tag + '">'+ msg.msg +'</span>';
-  $('<li>'+
-    '  <span class="name">'+ msg.name +':</span>'+
-    chatmsg +
-    '</li>').appendTo('#messages').hide().fadeIn(300);
+  createMessage(msg).appendTo('#messages').hide().fadeIn(300);
   if (bottoms) {
     $('#messages').scrollTop($('#messages')[0].scrollHeight);
   }
@@ -48,12 +55,7 @@ socket.on('member list', function(msg){
 
 socket.on('chat logs', function(msg){
   for (var i = 0; i < msg.length; i++) {
-    var tag = msg[i].tag || "msg";
-    var chatmsg = '<span class="' + tag + '">'+ msg[i].msg +'</span>';
-    $('#messages').append($('<li>'+
-                             '  <span class="name">'+ msg[i].name +'</span>'+
-                             chatmsg+
-                            '</li>')).scrollTop($('#messages')[0].scrollHeight);
+    $('#messages').append(createMessage(msg[i])).scrollTop($('#messages')[0].scrollHeight);
   }
 
 });
