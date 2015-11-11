@@ -1,6 +1,7 @@
 var socket = io();
 var member_html = '<span></span>';
 var question_list = [];
+var reply_to = '';
 
 $('form#enterForm #name').focus();
 
@@ -30,12 +31,36 @@ var createMessage = function(msg) {
   var tag = msg.tag || "msg";
   var time = new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
         .format(new Date(msg.date));
-  var chatmsg = '<p class="' + tag + '">'+ msg.msg +'</p>';
+  var reply = '';
+  if (msg.reply_to && msg.reply_to !== ''){
+    reply = '<a class="reply-link" href="#'+ msg.reply_to +'"><span class="glyphicon glyphicon-share-alt"></span>返信:</a>';
+  }
+  var chatmsg = '<p class="' + tag + '">'+ reply +msg.msg +'</p>';
   return $('<li id="'+ msg._id +'">'+
-           '  <span class="name">'+ msg.name +'<span class="time">'+ time +'</span></span>'+
+           '  <span class="name">'+ msg.name +'<span class="time">'+ time +'</span><a class="reply">返信</a></span>'+
            chatmsg +
-           '</li>');
-
+           '</li>').on('click', '.reply', function(event){
+             $('li .reply').parents('li').removeClass('reply-mode');
+             $('li .reply').html('返信');
+             var parent = $(this).parents('li');
+             var target = parent.get(0).id;
+             if (reply_to === '' || reply_to !== target) {
+               reply_to = target;
+               parent.addClass('reply-mode');
+               $('body').scrollTop(parent.offset().top - $(window).height() + $('#chatForm').height() + parent.height());
+               $(this).html('キャンセル');
+               $('#chatForm button')
+                 .addClass('btn-primary')
+                 .removeClass('btn-success')
+                 .html('Reply');
+             } else {
+               $('#chatForm button')
+                 .removeClass('btn-primary')
+                 .addClass('btn-success')
+                 .html('Send');
+               reply_to = '';
+             }
+           });
 };
 
 socket.on('chat message', function(msg){
@@ -81,8 +106,17 @@ socket.on('system', function(msg){
 });
 
 $('form#chatForm').submit(function(){
-  socket.emit('chat message', $('#m').val());
+  socket.emit('chat message', {reply_to: reply_to, msg: $('#m').val()});
   $('#m').val('');
+  if (reply_to !== '') {
+    $('li .reply').parents('li').removeClass('reply-mode');
+    $('li .reply').html('返信');
+    $('#chatForm button')
+      .removeClass('btn-primary')
+      .addClass('btn-success')
+      .html('Send');
+    reply_to = '';
+  }
   $('form#chatForm #m').focus();
   return false;
 });
