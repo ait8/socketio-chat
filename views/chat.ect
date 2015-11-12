@@ -11,11 +11,11 @@
   </div>
 </div>
 
-<form id="enterForm" class="enter-dialog">
+<form id="enterForm" class="enter-dialog" v-on:submit.prevent="onSubmit">
   <div class="form-group">
     <label for="name">あなたの名前</label>
     <input id="name" type="text" class="form-control" autocomplete="off"
-           placeholder="あなたの名前" value="<%= @name %>"/>
+           placeholder="あなたの名前" v-model="name" />
   </div>
   <div class="form-group">
     <button class="btn btn-block btn-success">入室</button>
@@ -27,17 +27,27 @@
 <div id="message-box" class="container-fluid">
   <div class="row">
     <div class="col-xs-12">
-      <ul class="messages"></ul>
+      <ul class="messages">
+        <li v-for="log in logs" id="{{log._id}}" transition="message">
+          <span class="name">
+            {{log.name}}
+            <span class="time">
+              {{log.date | time-format}}
+            </span>
+          </span>
+          <p class="{{log.tag}}">{{log.msg}}</p>
+        </li>
+      </ul>
     </div>
   </div>
 </div>
 
-<form action="" id="chatForm">
+<form action="" id="chatForm" v-on:submit.prevent="onSubmit">
   <div class="container-fluid">
     <div class="row">
       <div class="form-group col-md-11 col-xs-8">
         <input id="m" autocomplete="off" class="form-control"
-               placeholder="メッセージを入力して下さい"/>
+               placeholder="メッセージを入力して下さい" v-model="content"/>
       </div>
       <div class="form-group col-md-1 col-xs-4">
         <button class="btn btn-block btn-success">Send</button>
@@ -45,3 +55,11 @@
     </div>
   </div>
 </form>
+
+<div id="memberList" class='hide'>
+  <div class="member" v-for="member in members">{{member.name}}</div>
+</div>
+
+<div id="questionList" class='hide'>
+  <a class="questions" v-for="question in questions" href="#{{question.id}}">{{question.content}}</a>
+</div>
