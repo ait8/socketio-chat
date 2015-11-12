@@ -189,3 +189,12 @@ html, body {
     opacity: 1;
   }
 }
+
+
+.message-transition {
+  transition: all .3s ease;
+}
+
+.message-enter, .message-leave {
+  opacity: 0;
+}
