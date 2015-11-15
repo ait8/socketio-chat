@@ -136,7 +136,6 @@ io.on('connection', function(socket){
   socket.on('chat message', function(message){
     var msg = validator.escape(message.msg);
     var msgClass = "msg", question = false;
-
     if (msg === '') {
       socket.emit('system', "メッセージに空白は利用できません");
       return;

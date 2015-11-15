@@ -1,7 +1,11 @@
-var socket = io();
+var Log = require('./Log.vue');
+
+// var socket = io();
+var socket = require('./socket.js');
 var member_html = '<span></span>';
 var question_list = [];
 var reply_to = '';
+
 
 $('form#enterForm #name').focus();
 
@@ -36,12 +40,6 @@ var login = new Vue({
   }
 });
 
-var chatLogs = new Vue({
-  el: '#message-box',
-  data: {
-    logs: []
-  }});
-
 var chatForm = new Vue({
   el: '#chatForm',
   data: {
@@ -49,10 +47,20 @@ var chatForm = new Vue({
   },
   methods: {
     onSubmit: function(){
-      socket.emit('chat message', this.content);
+      socket.emit('chat message', {reply_to: '', msg: this.content});
       this.content = '';
       $('#m').focus();
     }
+  }
+});
+
+var chatLogs = new Vue({
+  el: '#message-box',
+  data: {
+    logs: []
+  },
+  components: {
+    'log' : Log
   }
 });
 

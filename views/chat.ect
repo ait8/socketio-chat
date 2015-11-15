@@ -28,15 +28,14 @@
   <div class="row">
     <div class="col-xs-12">
       <ul class="messages">
-        <li v-for="log in logs" id="{{log._id}}" transition="message">
-          <span class="name">
-            {{log.name}}
-            <span class="time">
-              {{log.date | time-format}}
-            </span>
-          </span>
-          <p class="{{log.tag}}">{{log.msg}}</p>
-        </li>
+        <log v-for="log in logs"
+             :_id="log._id"
+             :name="log.name"
+             :date="log.date"
+             :tag="log.tag"
+             :msg="log.msg"
+             :reply_to="log.reply_to"
+        ></log>
       </ul>
     </div>
   </div>
