@@ -87,23 +87,22 @@ socket.on('chat logs', function(msg){
     insertMessage(msg[i]);
   }
   Vue.nextTick(function(){
-    $('body').scrollTop($('.messages')[0].scrollHeight);
+    $(window).scrollTop($('.messages')[0].scrollHeight);
   });
 });
 
 socket.on('chat message', function(msg){
   var bottoms = false;
   if ($('#message-box').height() <=
-      $('body').scrollTop() + $('body').height()){
+      $(window).scrollTop() + $(window).height()){
         // || $('.readonly').length === 1) {
     bottoms = true;
   }
 
   insertMessage(msg);
-
   if (bottoms) {
     Vue.nextTick(function(){
-      $('body').scrollTop($('.messages')[0].scrollHeight);
+      $(window).scrollTop($('.messages')[0].scrollHeight);
     });
   }
 });

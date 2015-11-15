@@ -127,12 +127,22 @@ html, body {
   display: block;
 }
 
+.tool-box div{
+  margin: 6px;
+}
+
 .btn-circle {
   position: relative;
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  margin: 6px;
+  vertical-align: middle;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.btn-circle span {
 }
 
 .tool-box .btn {
