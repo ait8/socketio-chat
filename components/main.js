@@ -71,37 +71,6 @@ var memberList = new Vue({
   }
 });
 
-  // var reply = '';
-  // if (msg.reply_to && msg.reply_to !== ''){
-  //   reply = '<a class="reply-link" href="#'+ msg.reply_to +'"><span class="glyphicon glyphicon-share-alt"></span>返信:</a>';
-  // }
-  // var chatmsg = '<p class="' + tag + '">'+ reply +msg.msg +'</p>';
-  // return $('<li id="'+ msg._id +'">'+
-  //          '  <span class="name">'+ msg.name +'<span class="time">'+ time +'</span><a class="reply">返信</a></span>'+
-  //          chatmsg +
-  //          '</li>').on('click', '.reply', function(event){
-  //            $('li .reply').parents('li').removeClass('reply-mode');
-  //            $('li .reply').html('返信');
-  //            var parent = $(this).parents('li');
-  //            var target = parent.get(0).id;
-  //            if (reply_to === '' || reply_to !== target) {
-  //              reply_to = target;
-  //              parent.addClass('reply-mode');
-  //              $('body').scrollTop(parent.offset().top - $(window).height() + $('#chatForm').height() + parent.height());
-  //              $(this).html('キャンセル');
-  //              $('#chatForm button')
-  //                .addClass('btn-primary')
-  //                .removeClass('btn-success')
-  //                .html('Reply');
-  //            } else {
-  //              $('#chatForm button')
-  //                .removeClass('btn-primary')
-  //                .addClass('btn-success')
-  //                .html('Send');
-  //              reply_to = '';
-  //            }
-//          });
-
 var questionList = new Vue({
   el: '#questionList',
   data: {
@@ -157,22 +126,6 @@ socket.on('system', function(msg){
     flash = undefined;
   }, 2000);
 });
-
-// $('form#chatForm').submit(function(){
-//   socket.emit('chat message', {reply_to: reply_to, msg: $('#m').val()});
-//   $('#m').val('');
-//   if (reply_to !== '') {
-//     $('li .reply').parents('li').removeClass('reply-mode');
-//     $('li .reply').html('返信');
-//     $('#chatForm button')
-//       .removeClass('btn-primary')
-//       .addClass('btn-success')
-//       .html('Send');
-//     reply_to = '';
-//   }
-//   $('form#chatForm #m').focus();
-//   return false;
-// });
 
 $('.btn-user').popover({content: function(){return $('#memberList').html();},
                         placement: 'left',
