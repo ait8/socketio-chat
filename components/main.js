@@ -6,8 +6,9 @@ var socket = require('./socket.js');
 $('form#enterForm #name').focus();
 
 Vue.filter('time-format', function(date) {
-  return new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
-    .format(new Date(date));;
+  var pad = function(num){return ('0' + num).slice( -2 );};
+  var d = new Date(date);
+  return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
 });
 
 var login = new Vue({
