@@ -2,10 +2,6 @@ var Log = require('./Log.vue');
 
 // var socket = io();
 var socket = require('./socket.js');
-var member_html = '<span></span>';
-var question_list = [];
-var reply_to = '';
-
 
 $('form#enterForm #name').focus();
 
