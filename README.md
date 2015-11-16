@@ -9,8 +9,12 @@ Chat System for small group.
 - socket.io
 
 # How to Use
-Please change to your mongodb URL on `index.js` L43.
-Then, execute following commands.
+Please configure your mongodb URL on `index.js`.
+This configuration is near L40.
+```
+mongoose.connect('mongodb://path/to/mongodb-server/chatdb');
+```
+
 
 ```
 % npm install
