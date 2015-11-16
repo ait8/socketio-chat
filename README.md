@@ -9,7 +9,8 @@ Chat System for small group.
 - socket.io
 
 # How to Use
-Please change to your mongodb URL on `index.js` L40.
+Please change to your mongodb URL on `index.js` L43.
+Then, execute following commands.
 
 ```
 % npm install
