@@ -14,7 +14,7 @@ This configuration is near L40.
 ```
 mongoose.connect('mongodb://path/to/mongodb-server/chatdb');
 ```
-
+Then, exec these commands.
 
 ```
 % npm install
