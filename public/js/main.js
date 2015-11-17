@@ -40,6 +40,7 @@ var __vueify_style__ = require("vueify-insert-css").insert("\n .reply-highlight 
 
 module.exports = {
   name: 'Log',
+  inherit: true,
   props: ['_id', 'name', 'date', 'tag', 'msg', 'reply_to'],
   data: function data() {
     return {
@@ -84,7 +85,7 @@ module.exports = {
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n  <li id=\"{{_id}}\" transition=\"message\" @mouseenter=\"showPopup\" @mouseleave=\"hidePopup\" class=\"{{class}}\">\n    <span class=\"name\">\n      {{name}}\n      <span class=\"time\">\n        {{date | time-format}}\n      </span>\n      <a v-show=\"menu\" class=\"reply\" @click=\"reply\">{{reply_text}}</a>\n    </span>\n    <p class=\"{{tag}}\"><a class=\"reply-link\" href=\"#{{reply_to}}\" v-if=\"reply_to\" @click=\"replyHighlight\"><span class=\"glyphicon glyphicon-share-alt\"></span>返信</a>{{msg}}</p>\n  </li>\n  <form v-show=\"reply_show\" v-on:submit.prevent=\"onReply\" class=\"form-inline\">\n    <div class=\"form-group\">\n      <input id=\"m\" autocomplete=\"off\" class=\"form-control\" placeholder=\"返信を入力して下さい\" v-model=\"content\">\n    </div>\n    <button class=\"btn btn-primary\">Reply</button>\n  </form>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n  <li id=\"{{_id}}\" transition=\"message\" @mouseenter=\"showPopup\" @mouseleave=\"hidePopup\" class=\"{{class}}\">\n    <span class=\"name\">\n      {{name}}\n      <span class=\"time\">\n        {{date | time-format}}\n      </span>\n      <a v-if=\"readonly\" v-show=\"menu\" class=\"reply\" @click=\"reply\">{{reply_text}}</a>\n    </span>\n    <p class=\"{{tag}}\"><a class=\"reply-link\" href=\"#{{reply_to}}\" v-if=\"reply_to\" @click=\"replyHighlight\"><span class=\"glyphicon glyphicon-share-alt\"></span>返信</a>{{msg}}</p>\n  </li>\n  <form v-if=\"reply_show\" v-on:submit.prevent=\"onReply\" class=\"form-inline\">\n    <div class=\"form-group\">\n      <input id=\"m\" autocomplete=\"off\" class=\"form-control\" placeholder=\"返信を入力して下さい\" v-model=\"content\">\n    </div>\n    <button class=\"btn btn-primary\">Reply</button>\n  </form>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
@@ -260,7 +261,13 @@ Vue.filter('time-format', function(date) {
 var chatLogs = new Vue({
   el: '#message-box',
   data: {
-    logs: []
+    logs: [],
+    readonly: false
+  },
+  created: function(){
+    if ($('#readonly').length !== 0) {
+      this.readonly = true;
+    }
   },
   components: {
     'log' : Log

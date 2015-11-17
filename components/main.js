@@ -20,7 +20,13 @@ Vue.filter('time-format', function(date) {
 var chatLogs = new Vue({
   el: '#message-box',
   data: {
-    logs: []
+    logs: [],
+    readonly: false
+  },
+  created: function(){
+    if ($('#readonly').length !== 0) {
+      this.readonly = true;
+    }
   },
   components: {
     'log' : Log

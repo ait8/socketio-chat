@@ -43,11 +43,11 @@
       <span class="time">
         {{date | time-format}}
       </span>
-      <a v-show="menu" class="reply" @click="reply">{{reply_text}}</a>
+      <a v-if="readonly" v-show="menu" class="reply" @click="reply">{{reply_text}}</a>
     </span>
     <p class="{{tag}}"><a class="reply-link" href="#{{reply_to}}" v-if="reply_to" @click="replyHighlight"><span class="glyphicon glyphicon-share-alt"></span>返信</a>{{msg}}</p>
   </li>
-  <form v-show="reply_show" v-on:submit.prevent="onReply" class="form-inline">
+  <form v-if="reply_show" v-on:submit.prevent="onReply" class="form-inline">
     <div class="form-group">
       <input id="m" autocomplete="off" class="form-control"
              placeholder="返信を入力して下さい" v-model="content"/>
@@ -59,6 +59,7 @@
 <script>
  module.exports = {
    name: 'Log',
+   inherit: true,
    props: ['_id', 'name', 'date', 'tag', 'msg', 'reply_to'],
    data: function(){
      return {
