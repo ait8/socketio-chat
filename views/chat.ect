@@ -1,16 +1,6 @@
 <% extend 'layout.ect' %>
 
-<div class="tool-box">
-  <div>
-    <a class="btn btn-circle btn-user" tabindex="0" >
-      <span class="glyphicon glyphicon-user"></span>
-      <span class="num"></span></a>
-  </div>
-  <div>
-    <a class="btn btn-circle btn-question" tabindex="0" >
-      <span class="glyphicon glyphicon-question-sign"></span></a>
-  </div>
-</div>
+<toolbox></toolbox>
 
 <form id="enterForm" class="enter-dialog" v-on:submit.prevent="onSubmit">
   <div class="form-group">
@@ -55,11 +45,3 @@
     </div>
   </div>
 </form>
-
-<div id="memberList" class='hide'>
-  <div class="member" v-for="member in members">{{member.name}}</div>
-</div>
-
-<div id="questionList" class='hide'>
-  <a class="questions" v-for="question in questions" href="#{{question.id}}">{{question.content}}</a>
-</div>
