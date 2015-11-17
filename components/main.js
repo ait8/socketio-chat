@@ -1,4 +1,8 @@
-var Log = require('./Log.vue');
+var Log = require('./Log.vue'),
+    ToolBox = require('./ToolBox.vue');
+
+Vue.component('log', Log);
+Vue.component('toolbox', ToolBox);
 
 // var socket = io();
 var socket = require('./socket.js');
@@ -60,25 +64,8 @@ var chatLogs = new Vue({
   }
 });
 
-var memberList = new Vue({
-  el: '#memberList',
-  data: {
-    members: []
-  }
-});
-
-var questionList = new Vue({
-  el: '#questionList',
-  data: {
-    questions: []
-  }
-});
-
 var insertMessage = function(msg){
   chatLogs.$data.logs.push(msg);
-  if (msg.question) {
-    questionList.$data.questions.push({id: msg._id, content: msg.msg.substr(0, 15) + '……'});
-  }
 };
 
 socket.on('chat logs', function(msg){
@@ -106,12 +93,8 @@ socket.on('chat message', function(msg){
   }
 });
 
-socket.on('member list', function(msg){
-  memberList.$data.members = msg;
-  $('.btn-user .num').html(msg.length);
-});
-
 var flash = undefined;
+
 socket.on('system', function(msg){
   if (flash !== undefined ) clearTimeout(flash);
 
@@ -122,24 +105,14 @@ socket.on('system', function(msg){
   }, 2000);
 });
 
-$('.btn-user').popover({content: function(){return $('#memberList').html();},
-                        placement: 'left',
-                        html: true,
-                        container: 'body',
-                        trigger: 'focus'});
-
-$('.btn-question').popover({
-  content: function(){return $('#questionList').html();},
-  placement: 'left',
-  html: true,
-  container: 'body',
-  trigger: 'focus'});
-
-
 $('body').on('shown.bs.popover', function(event){
   $('.messages li').removeClass('question-flash');
   $('.questions').on('click', function(event){
     var target = $(this).attr('href');
     $(target).addClass('question-flash');
   });
+});
+
+new Vue({
+  el: '#main'
 });

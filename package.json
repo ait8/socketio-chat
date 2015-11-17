@@ -25,5 +25,10 @@
   },
   "scripts": {
     "dev": "watchify -vd -p browserify-hmr -t vueify -e components/main.js -o public/js/build.js & node index.js"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-browserify": "^0.5.1",
+    "gulp-express": "^0.3.5"
   }
 }
