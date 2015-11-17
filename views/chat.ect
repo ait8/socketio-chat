@@ -1,6 +1,6 @@
 <% extend 'layout.ect' %>
 
-<toolbox></toolbox>
+<toolbox :readonly="false"></toolbox>
 
 <form id="enterForm" class="enter-dialog" v-on:submit.prevent="onSubmit">
   <div class="form-group">

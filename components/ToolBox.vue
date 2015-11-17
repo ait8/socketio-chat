@@ -1,39 +1,62 @@
+<style>
+ .btn-realtime {
+   background: #FFF;
+   color: #F9690E;
+   opacity: 0.7;
+ }
+ .btn-realtime:hover {
+   color: #FFF;
+   background: #F9690E;
+   opacity: 1;
+ }
+ .btn-realtime.active {
+   color: #FFF;
+   background: #F9690E;
+   opacity: 1;
+ }
+</style>
+
 <template>
   <div class="tool-box">
-    <div>
+    <div v-if="readonly">
+      <button class="btn btn-circle btn-realtime {{active}}" @click="realtimeMode">
+        <span class="glyphicon glyphicon-refresh"></span>
+      </button>
+    </div>
+    <div v-if="!readonly">
       <a class="btn btn-circle btn-user" tabindex="0">
         <span class="glyphicon glyphicon-user"></span>
         <span class="num">{{members.length}}</span></a>
+      <div id="memberList" class='hide'>
+        <div class="member" v-for="member in members">{{member.name}}</div>
+      </div>
     </div>
-    <div>
+    <div v-if="!readonly">
       <a class="btn btn-circle btn-question" tabindex="0" >
         <span class="glyphicon glyphicon-question-sign"></span></a>
+      <div id="questionList" class='hide'>
+        <a class="questions" v-for="question in questions" href="#{{question.id}}">{{question.content}}</a>
+      </div>
     </div>
-  </div>
-  <div id="memberList" class='hide'>
-    <div class="member" v-for="member in members">{{member.name}}</div>
-  </div>
-
-  <div id="questionList" class='hide'>
-    <a class="questions" v-for="question in questions" href="#{{question.id}}">{{question.content}}</a>
   </div>
 </template>
 
 <script>
  module.exports = {
+   props: ['readonly'],
    data: function() {
      return {
        members: [],
-       questions: []
+       questions: [],
+       active: '',
+       active_func: ''
      };
    },
    created: function() {
      var that = this;
      var socket = require('./socket.js');
      socket.on('member list', function(msg){
-       console.log(msg);
        that.members = msg;
-       console.log(that.members);
      });
 
      var insertQuestion = function(msg){
@@ -66,8 +89,17 @@
      });
    },
    methods: {
-     showMembers: function() {
-       console.log('click');
+     realtimeMode: function() {
+       if (this.active === '') {
+         this.active = 'active';
+         this.active_func = setInterval(function(){
+           $(window).scrollTop($('.messages')[0].scrollHeight);
+         }, 500);
+       } else {
+         clearInterval(this.active_func);
+         this.active = '';
+         this.active_func = '';
+       }
      }
    }
  };

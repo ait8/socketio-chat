@@ -65,22 +65,24 @@ if (module.hot) {(function () {  module.hot.accept()
   }
 })()}
 },{"./socket.js":4,"vue":73,"vue-hot-reload-api":7,"vueify-insert-css":75}],2:[function(require,module,exports){
+var __vueify_style__ = require("vueify-insert-css").insert("\n .btn-realtime {\n   background: #FFF;\n   color: #F9690E;\n   opacity: 0.7;\n }\n .btn-realtime:hover {\n   color: #FFF;\n   background: #F9690E;\n   opacity: 1;\n }\n .btn-realtime.active {\n   color: #FFF;\n   background: #F9690E;\n   opacity: 1;\n }\n")
 'use strict';
 
 module.exports = {
+  props: ['readonly'],
   data: function data() {
     return {
       members: [],
-      questions: []
+      questions: [],
+      active: '',
+      active_func: ''
     };
   },
   created: function created() {
     var that = this;
     var socket = require('./socket.js');
     socket.on('member list', function (msg) {
-      console.log(msg);
       that.members = msg;
-      console.log(that.members);
     });
 
     var insertQuestion = function insertQuestion(msg) {
@@ -117,25 +119,38 @@ module.exports = {
     });
   },
   methods: {
-    showMembers: function showMembers() {
-      console.log('click');
+    realtimeMode: function realtimeMode() {
+      if (this.active === '') {
+        this.active = 'active';
+        this.active_func = setInterval(function () {
+          $(window).scrollTop($('.messages')[0].scrollHeight);
+        }, 500);
+      } else {
+        clearInterval(this.active_func);
+        this.active = '';
+        this.active_func = '';
+      }
     }
   }
 };
 if (module.exports.__esModule) module.exports = module.exports.default
-;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n  <div class=\"tool-box\">\n    <div>\n      <a class=\"btn btn-circle btn-user\" tabindex=\"0\">\n        <span class=\"glyphicon glyphicon-user\"></span>\n        <span class=\"num\">{{members.length}}</span></a>\n    </div>\n    <div>\n      <a class=\"btn btn-circle btn-question\" tabindex=\"0\">\n        <span class=\"glyphicon glyphicon-question-sign\"></span></a>\n    </div>\n  </div>\n  <div id=\"memberList\" class=\"hide\">\n    <div class=\"member\" v-for=\"member in members\">{{member.name}}</div>\n  </div>\n\n  <div id=\"questionList\" class=\"hide\">\n    <a class=\"questions\" v-for=\"question in questions\" href=\"#{{question.id}}\">{{question.content}}</a>\n  </div>\n"
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n  <div class=\"tool-box\">\n    <div v-if=\"readonly\">\n      <button class=\"btn btn-circle btn-realtime {{active}}\" @click=\"realtimeMode\">\n        <span class=\"glyphicon glyphicon-refresh\"></span>\n      </button>\n    </div>\n    <div v-if=\"!readonly\">\n      <a class=\"btn btn-circle btn-user\" tabindex=\"0\">\n        <span class=\"glyphicon glyphicon-user\"></span>\n        <span class=\"num\">{{members.length}}</span></a>\n      <div id=\"memberList\" class=\"hide\">\n        <div class=\"member\" v-for=\"member in members\">{{member.name}}</div>\n      </div>\n    </div>\n    <div v-if=\"!readonly\">\n      <a class=\"btn btn-circle btn-question\" tabindex=\"0\">\n        <span class=\"glyphicon glyphicon-question-sign\"></span></a>\n      <div id=\"questionList\" class=\"hide\">\n        <a class=\"questions\" v-for=\"question in questions\" href=\"#{{question.id}}\">{{question.content}}</a>\n      </div>\n    </div>\n  </div>\n"
 if (module.hot) {(function () {  module.hot.accept()
   var hotAPI = require("vue-hot-reload-api")
   hotAPI.install(require("vue"), true)
   if (!hotAPI.compatible) return
   var id = "/home/vagrant/socketio-chat/components/ToolBox.vue"
+  module.hot.dispose(function () {
+    require("vueify-insert-css").cache["\n .btn-realtime {\n   background: #FFF;\n   color: #F9690E;\n   opacity: 0.7;\n }\n .btn-realtime:hover {\n   color: #FFF;\n   background: #F9690E;\n   opacity: 1;\n }\n .btn-realtime.active {\n   color: #FFF;\n   background: #F9690E;\n   opacity: 1;\n }\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
   if (!module.hot.data) {
     hotAPI.createRecord(id, module.exports)
   } else {
     hotAPI.update(id, module.exports, module.exports.template)
   }
 })()}
-},{"./socket.js":4,"vue":73,"vue-hot-reload-api":7}],3:[function(require,module,exports){
+},{"./socket.js":4,"vue":73,"vue-hot-reload-api":7,"vueify-insert-css":75}],3:[function(require,module,exports){
 var Log = require('./Log.vue'),
     ToolBox = require('./ToolBox.vue');
 
