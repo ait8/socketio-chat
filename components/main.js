@@ -1,34 +1,20 @@
 var Log = require('./Log.vue'),
     ToolBox = require('./ToolBox.vue'),
-    Login = require('./Login.vue');
+    Login = require('./Login.vue'),
+    InputBox = require('./InputBox');
 
 Vue.component('log', Log);
 Vue.component('toolbox', ToolBox);
 Vue.component('login', Login);
+Vue.component('inputbox', InputBox);
 
 // var socket = io();
 var socket = require('./socket.js');
-
-$('form#enterForm #name').focus();
 
 Vue.filter('time-format', function(date) {
   var pad = function(num){return ('0' + num).slice( -2 );};
   var d = new Date(date);
   return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-});
-
-var chatForm = new Vue({
-  el: '#chatForm',
-  data: {
-    content: ''
-  },
-  methods: {
-    onSubmit: function(){
-      socket.emit('chat message', {reply_to: '', msg: this.content});
-      this.content = '';
-      $('#m').focus();
-    }
-  }
 });
 
 var chatLogs = new Vue({
