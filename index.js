@@ -133,7 +133,6 @@ io.on('connection', function(socket){
   });
 
   socket.on('chat message', function(msg){
-    msg = validator.escape(msg);
     var msgClass = "msg", question = false;
 
     if (msg === '') {
