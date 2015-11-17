@@ -1,8 +1,10 @@
 var Log = require('./Log.vue'),
-    ToolBox = require('./ToolBox.vue');
+    ToolBox = require('./ToolBox.vue'),
+    Login = require('./Login.vue');
 
 Vue.component('log', Log);
 Vue.component('toolbox', ToolBox);
+Vue.component('login', Login);
 
 // var socket = io();
 var socket = require('./socket.js');
@@ -13,31 +15,6 @@ Vue.filter('time-format', function(date) {
   var pad = function(num){return ('0' + num).slice( -2 );};
   var d = new Date(date);
   return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-});
-
-var login = new Vue({
-  el: '#enterForm',
-  data: {
-    name: $.cookie('name')
-  },
-  methods: {
-    onSubmit: function() {
-      var name = this.name;
-      if (name === '') {
-        return;
-      }
-      $.post("/users/" + name)
-        .done(function(data){
-          socket.emit('enter room', name);
-          this.name = '';
-          $('.enter-dialog').fadeOut(300);
-          $('form#chatForm #m').focus();
-          $('.flash').fadeOut(300);
-        }).fail(function(error){
-          $('.flash').html(error.responseJSON.msg).fadeIn(300);
-        });
-    }
-  }
 });
 
 var chatForm = new Vue({

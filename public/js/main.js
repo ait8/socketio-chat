@@ -64,7 +64,53 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, module.exports.template)
   }
 })()}
-},{"./socket.js":4,"vue":73,"vue-hot-reload-api":7,"vueify-insert-css":75}],2:[function(require,module,exports){
+},{"./socket.js":5,"vue":74,"vue-hot-reload-api":8,"vueify-insert-css":76}],2:[function(require,module,exports){
+var __vueify_style__ = require("vueify-insert-css").insert("\n #enterForm {\n   border-radius: 2px;\n   z-index: 1001;\n   background: #FFF;\n   box-shadow:rgba(113, 135, 164, 0.65) 0px 0px 6px 3px;\n   padding: 10px;\n   position: fixed;\n   width: 200px;\n   top: 30%;\n   height: auto;\n   left: calc(50% - 100px);\n }\n")
+'use strict';
+
+var socket = require('./socket.js');
+module.exports = {
+  data: function data() {
+    return {
+      name: $.cookie('name')
+    };
+  },
+  methods: {
+    onSubmit: function onSubmit() {
+      var name = this.name;
+      if (name === '') {
+        return;
+      }
+      $.post("/users/" + name).done(function (data) {
+        socket.emit('enter room', name);
+        this.name = '';
+        $('.enter-dialog').fadeOut(300);
+        $('form#chatForm #m').focus();
+        $('.flash').fadeOut(300);
+      }).fail(function (error) {
+        $('.flash').html(error.responseJSON.msg).fadeIn(300);
+      });
+    }
+  }
+};
+if (module.exports.__esModule) module.exports = module.exports.default
+;(typeof module.exports === "function"? module.exports.options: module.exports).template = "\n  <form id=\"enterForm\" class=\"enter-dialog\" v-on:submit.prevent=\"onSubmit\">\n    <div class=\"form-group\">\n      <label for=\"name\">あなたの名前</label>\n      <input id=\"name\" type=\"text\" class=\"form-control\" autocomplete=\"off\" placeholder=\"あなたの名前\" v-model=\"name\">\n    </div>\n    <div class=\"form-group\">\n      <button class=\"btn btn-block btn-success\">入室</button>\n    </div>\n  </form>\n  <div class=\"enter-dialog\" id=\"layer\"></div>\n"
+if (module.hot) {(function () {  module.hot.accept()
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), true)
+  if (!hotAPI.compatible) return
+  var id = "/home/vagrant/socketio-chat/components/Login.vue"
+  module.hot.dispose(function () {
+    require("vueify-insert-css").cache["\n #enterForm {\n   border-radius: 2px;\n   z-index: 1001;\n   background: #FFF;\n   box-shadow:rgba(113, 135, 164, 0.65) 0px 0px 6px 3px;\n   padding: 10px;\n   position: fixed;\n   width: 200px;\n   top: 30%;\n   height: auto;\n   left: calc(50% - 100px);\n }\n"] = false
+    document.head.removeChild(__vueify_style__)
+  })
+  if (!module.hot.data) {
+    hotAPI.createRecord(id, module.exports)
+  } else {
+    hotAPI.update(id, module.exports, module.exports.template)
+  }
+})()}
+},{"./socket.js":5,"vue":74,"vue-hot-reload-api":8,"vueify-insert-css":76}],3:[function(require,module,exports){
 var __vueify_style__ = require("vueify-insert-css").insert("\n .tool-box {\n   padding: 10px;\n   position: fixed;\n   right: 0;\n   z-index: 1009;\n   vertical-align: middle;\n }\n\n .tool-box .num{\n   display: block;\n }\n\n .tool-box div{\n   margin: 6px;\n }\n\n .btn-circle {\n   position: relative;\n   width: 60px;\n   height: 60px;\n   border-radius: 50%;\n   vertical-align: middle;\n   display: table-cell;\n   text-align: center;\n   vertical-align: middle;\n }\n\n .btn-circle span {\n }\n\n .tool-box .btn {\n   background: #FFF;\n   box-shadow:rgba(113, 135, 164, 0.25) 0px 0px 3px 2px;\n   outline: none;\n }\n\n .btn-user {\n   background: #FFF;\n   color: #89C4F4;\n }\n\n .btn-user:hover {\n   color: #FFF;\n   background: #89C4F4;\n }\n\n .btn-question {\n   background: #FFF;\n   color: #CF000F;\n }\n\n .btn-question:hover {\n   color: #FFF;\n   background: #CF000F;\n }\n\n .member {\n   padding: 1px;\n }\n\n .member:before {\n   color: #87D37C;\n   content: \"●\";\n   padding-right: 5px;\n }\n\n .questions {\n   display: block;\n }\n .btn-realtime {\n   background: #FFF;\n   color: #F9690E;\n   opacity: 0.7;\n }\n .btn-realtime:hover {\n   color: #FFF;\n   background: #F9690E;\n   opacity: 1;\n }\n .btn-realtime.active {\n   color: #FFF;\n   background: #F9690E;\n   opacity: 1;\n }\n")
 'use strict';
 
@@ -150,12 +196,14 @@ if (module.hot) {(function () {  module.hot.accept()
     hotAPI.update(id, module.exports, module.exports.template)
   }
 })()}
-},{"./socket.js":4,"vue":73,"vue-hot-reload-api":7,"vueify-insert-css":75}],3:[function(require,module,exports){
+},{"./socket.js":5,"vue":74,"vue-hot-reload-api":8,"vueify-insert-css":76}],4:[function(require,module,exports){
 var Log = require('./Log.vue'),
-    ToolBox = require('./ToolBox.vue');
+    ToolBox = require('./ToolBox.vue'),
+    Login = require('./Login.vue');
 
 Vue.component('log', Log);
 Vue.component('toolbox', ToolBox);
+Vue.component('login', Login);
 
 // var socket = io();
 var socket = require('./socket.js');
@@ -166,31 +214,6 @@ Vue.filter('time-format', function(date) {
   var pad = function(num){return ('0' + num).slice( -2 );};
   var d = new Date(date);
   return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-});
-
-var login = new Vue({
-  el: '#enterForm',
-  data: {
-    name: $.cookie('name')
-  },
-  methods: {
-    onSubmit: function() {
-      var name = this.name;
-      if (name === '') {
-        return;
-      }
-      $.post("/users/" + name)
-        .done(function(data){
-          socket.emit('enter room', name);
-          this.name = '';
-          $('.enter-dialog').fadeOut(300);
-          $('form#chatForm #m').focus();
-          $('.flash').fadeOut(300);
-        }).fail(function(error){
-          $('.flash').html(error.responseJSON.msg).fadeIn(300);
-        });
-    }
-  }
 });
 
 var chatForm = new Vue({
@@ -270,13 +293,13 @@ new Vue({
   el: '#main'
 });
 
-},{"./Log.vue":1,"./ToolBox.vue":2,"./socket.js":4}],4:[function(require,module,exports){
+},{"./Log.vue":1,"./Login.vue":2,"./ToolBox.vue":3,"./socket.js":5}],5:[function(require,module,exports){
 module.exports = function(){
   var socket = require('../node_modules/socket.io-client/socket.io.js')();
   return socket;
 }();
 
-},{"../node_modules/socket.io-client/socket.io.js":6}],5:[function(require,module,exports){
+},{"../node_modules/socket.io-client/socket.io.js":7}],6:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -341,7 +364,7 @@ process.chdir = function (dir) {
     throw new Error('process.chdir is not supported');
 };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function (global){
 !function(e){if("object"==typeof exports&&"undefined"!=typeof module)module.exports=e();else if("function"==typeof define&&define.amd)define([],e);else{var f;"undefined"!=typeof window?f=window:"undefined"!=typeof global?f=global:"undefined"!=typeof self&&(f=self),f.io=e()}}(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(_dereq_,module,exports){
 
@@ -7333,7 +7356,7 @@ function toArray(list, index) {
 });
 
 }).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var Vue // late bind
 var map = Object.create(null)
 var shimmed = false
@@ -7571,7 +7594,7 @@ function format (id) {
   return id.match(/[^\/]+\.vue$/)[0]
 }
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 var _ = require('../util')
 var Watcher = require('../watcher')
 var Path = require('../parsers/path')
@@ -7747,7 +7770,7 @@ function clean (obj) {
   return JSON.parse(JSON.stringify(obj))
 }
 
-},{"../parsers/directive":58,"../parsers/expression":59,"../parsers/path":60,"../parsers/text":62,"../util":70,"../watcher":74}],9:[function(require,module,exports){
+},{"../parsers/directive":59,"../parsers/expression":60,"../parsers/path":61,"../parsers/text":63,"../util":71,"../watcher":75}],10:[function(require,module,exports){
 var _ = require('../util')
 var transition = require('../transition')
 
@@ -7953,7 +7976,7 @@ function remove (el, vm, cb) {
   if (cb) cb()
 }
 
-},{"../transition":63,"../util":70}],10:[function(require,module,exports){
+},{"../transition":64,"../util":71}],11:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -8124,7 +8147,7 @@ function modifyListenerCount (vm, event, count) {
   }
 }
 
-},{"../util":70}],11:[function(require,module,exports){
+},{"../util":71}],12:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var config = require('../config')
@@ -8289,7 +8312,7 @@ config._assetTypes.forEach(function (type) {
 })
 
 }).call(this,require("7YKIPe"))
-},{"../compiler":17,"../config":19,"../directives/internal":26,"../fragment/factory":48,"../parsers/directive":58,"../parsers/expression":59,"../parsers/path":60,"../parsers/template":61,"../parsers/text":62,"../util":70,"7YKIPe":5}],12:[function(require,module,exports){
+},{"../compiler":18,"../config":20,"../directives/internal":27,"../fragment/factory":49,"../parsers/directive":59,"../parsers/expression":60,"../parsers/path":61,"../parsers/template":62,"../parsers/text":63,"../util":71,"7YKIPe":6}],13:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -8361,7 +8384,7 @@ exports.$compile = function (el, host, scope, frag) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../compiler":17,"../util":70,"7YKIPe":5}],13:[function(require,module,exports){
+},{"../compiler":18,"../util":71,"7YKIPe":6}],14:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -8470,7 +8493,7 @@ exports.push = function (watcher) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"./config":19,"./util":70,"7YKIPe":5}],14:[function(require,module,exports){
+},{"./config":20,"./util":71,"7YKIPe":6}],15:[function(require,module,exports){
 /**
  * A doubly linked list-based Least Recently Used (LRU)
  * cache. Will keep most recently used items while
@@ -8584,7 +8607,7 @@ p.get = function (key, returnEntry) {
 
 module.exports = Cache
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var dirParser = require('../parsers/directive')
@@ -8795,7 +8818,7 @@ function getDefault (vm, options) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../config":19,"../directives/internal/prop":27,"../parsers/directive":58,"../parsers/path":60,"../util":70,"7YKIPe":5}],16:[function(require,module,exports){
+},{"../config":20,"../directives/internal/prop":28,"../parsers/directive":59,"../parsers/path":61,"../util":71,"7YKIPe":6}],17:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var publicDirectives = require('../directives/public')
@@ -9570,13 +9593,13 @@ function makeNodeLinkFn (directives) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../directives/internal":26,"../directives/public":36,"../parsers/directive":58,"../parsers/template":61,"../parsers/text":62,"../util":70,"./compile-props":15,"7YKIPe":5}],17:[function(require,module,exports){
+},{"../directives/internal":27,"../directives/public":37,"../parsers/directive":59,"../parsers/template":62,"../parsers/text":63,"../util":71,"./compile-props":16,"7YKIPe":6}],18:[function(require,module,exports){
 var _ = require('../util')
 
 _.extend(exports, require('./compile'))
 _.extend(exports, require('./transclude'))
 
-},{"../util":70,"./compile":16,"./transclude":18}],18:[function(require,module,exports){
+},{"../util":71,"./compile":17,"./transclude":19}],19:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var templateParser = require('../parsers/template')
@@ -9728,7 +9751,7 @@ function mergeAttrs (from, to) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../parsers/template":61,"../util":70,"7YKIPe":5}],19:[function(require,module,exports){
+},{"../parsers/template":62,"../util":71,"7YKIPe":6}],20:[function(require,module,exports){
 module.exports = {
 
   /**
@@ -9842,7 +9865,7 @@ Object.defineProperty(module.exports, 'unsafeDelimiters', {
   }
 })
 
-},{"./parsers/text":62}],20:[function(require,module,exports){
+},{"./parsers/text":63}],21:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var Watcher = require('./watcher')
@@ -10168,11 +10191,11 @@ Directive.prototype._teardown = function () {
 module.exports = Directive
 
 }).call(this,require("7YKIPe"))
-},{"./parsers/expression":59,"./util":70,"./watcher":74,"7YKIPe":5}],21:[function(require,module,exports){
+},{"./parsers/expression":60,"./util":71,"./watcher":75,"7YKIPe":6}],22:[function(require,module,exports){
 exports.slot = require('./slot')
 exports.partial = require('./partial')
 
-},{"./partial":22,"./slot":23}],22:[function(require,module,exports){
+},{"./partial":23,"./slot":24}],23:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 var vIf = require('../public/if')
@@ -10219,7 +10242,7 @@ module.exports = {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../fragment/factory":48,"../../util":70,"../public/if":35,"7YKIPe":5}],23:[function(require,module,exports){
+},{"../../fragment/factory":49,"../../util":71,"../public/if":36,"7YKIPe":6}],24:[function(require,module,exports){
 var _ = require('../../util')
 var templateParser = require('../../parsers/template')
 
@@ -10345,7 +10368,7 @@ function extractFragment (nodes, parent, main) {
   }
 }
 
-},{"../../parsers/template":61,"../../util":70}],24:[function(require,module,exports){
+},{"../../parsers/template":62,"../../util":71}],25:[function(require,module,exports){
 var _ = require('../../util')
 var addClass = _.addClass
 var removeClass = _.removeClass
@@ -10418,7 +10441,7 @@ function contains (value, key) {
     : value.hasOwnProperty(key)
 }
 
-},{"../../util":70}],25:[function(require,module,exports){
+},{"../../util":71}],26:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 var templateParser = require('../../parsers/template')
@@ -10770,14 +10793,14 @@ module.exports = {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../parsers/template":61,"../../util":70,"7YKIPe":5}],26:[function(require,module,exports){
+},{"../../parsers/template":62,"../../util":71,"7YKIPe":6}],27:[function(require,module,exports){
 exports.style = require('./style')
 exports['class'] = require('./class')
 exports.component = require('./component')
 exports.prop = require('./prop')
 exports.transition = require('./transition')
 
-},{"./class":24,"./component":25,"./prop":27,"./style":28,"./transition":29}],27:[function(require,module,exports){
+},{"./class":25,"./component":26,"./prop":28,"./style":29,"./transition":30}],28:[function(require,module,exports){
 // NOTE: the prop internal directive is compiled and linked
 // during _initScope(), before the created hook is called.
 // The purpose is to make the initial prop values available
@@ -10848,7 +10871,7 @@ module.exports = {
   }
 }
 
-},{"../../config":19,"../../util":70,"../../watcher":74}],28:[function(require,module,exports){
+},{"../../config":20,"../../util":71,"../../watcher":75}],29:[function(require,module,exports){
 var _ = require('../../util')
 var prefixes = ['-webkit-', '-moz-', '-ms-']
 var camelPrefixes = ['Webkit', 'Moz', 'ms']
@@ -10957,7 +10980,7 @@ function prefix (prop) {
   }
 }
 
-},{"../../util":70}],29:[function(require,module,exports){
+},{"../../util":71}],30:[function(require,module,exports){
 var _ = require('../../util')
 var Transition = require('../../transition/transition')
 
@@ -10979,7 +11002,7 @@ module.exports = {
   }
 }
 
-},{"../../transition/transition":65,"../../util":70}],30:[function(require,module,exports){
+},{"../../transition/transition":66,"../../util":71}],31:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 
@@ -11106,7 +11129,7 @@ module.exports = {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../util":70,"../internal/style":28,"7YKIPe":5}],31:[function(require,module,exports){
+},{"../../util":71,"../internal/style":29,"7YKIPe":6}],32:[function(require,module,exports){
 module.exports = {
   bind: function () {
     var el = this.el
@@ -11116,7 +11139,7 @@ module.exports = {
   }
 }
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -11145,7 +11168,7 @@ module.exports = {
   }
 }
 
-},{"../../util":70}],33:[function(require,module,exports){
+},{"../../util":71}],34:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 var FragmentFactory = require('../../fragment/factory')
@@ -11738,7 +11761,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../fragment/factory":48,"../../util":70,"7YKIPe":5}],34:[function(require,module,exports){
+},{"../../fragment/factory":49,"../../util":71,"7YKIPe":6}],35:[function(require,module,exports){
 var _ = require('../../util')
 var templateParser = require('../../parsers/template')
 
@@ -11780,7 +11803,7 @@ module.exports = {
   }
 }
 
-},{"../../parsers/template":61,"../../util":70}],35:[function(require,module,exports){
+},{"../../parsers/template":62,"../../util":71}],36:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 var FragmentFactory = require('../../fragment/factory')
@@ -11850,7 +11873,7 @@ module.exports = {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../fragment/factory":48,"../../util":70,"7YKIPe":5}],36:[function(require,module,exports){
+},{"../../fragment/factory":49,"../../util":71,"7YKIPe":6}],37:[function(require,module,exports){
 // text & html
 exports.text = require('./text')
 exports.html = require('./html')
@@ -11876,7 +11899,7 @@ exports.ref = require('./ref')
 // cloak
 exports.cloak = require('./cloak')
 
-},{"./bind":30,"./cloak":31,"./el":32,"./for":33,"./html":34,"./if":35,"./model":38,"./on":42,"./ref":43,"./show":44,"./text":45}],37:[function(require,module,exports){
+},{"./bind":31,"./cloak":32,"./el":33,"./for":34,"./html":35,"./if":36,"./model":39,"./on":43,"./ref":44,"./show":45,"./text":46}],38:[function(require,module,exports){
 var _ = require('../../../util')
 
 module.exports = {
@@ -11940,7 +11963,7 @@ module.exports = {
   }
 }
 
-},{"../../../util":70}],38:[function(require,module,exports){
+},{"../../../util":71}],39:[function(require,module,exports){
 (function (process){
 var _ = require('../../../util')
 
@@ -12026,7 +12049,7 @@ module.exports = {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../../util":70,"./checkbox":37,"./radio":39,"./select":40,"./text":41,"7YKIPe":5}],39:[function(require,module,exports){
+},{"../../../util":71,"./checkbox":38,"./radio":40,"./select":41,"./text":42,"7YKIPe":6}],40:[function(require,module,exports){
 var _ = require('../../../util')
 
 module.exports = {
@@ -12062,7 +12085,7 @@ module.exports = {
   }
 }
 
-},{"../../../util":70}],40:[function(require,module,exports){
+},{"../../../util":71}],41:[function(require,module,exports){
 var _ = require('../../../util')
 
 module.exports = {
@@ -12182,7 +12205,7 @@ function indexOf (arr, val) {
   return -1
 }
 
-},{"../../../util":70}],41:[function(require,module,exports){
+},{"../../../util":71}],42:[function(require,module,exports){
 var _ = require('../../../util')
 
 module.exports = {
@@ -12311,7 +12334,7 @@ module.exports = {
   }
 }
 
-},{"../../../util":70}],42:[function(require,module,exports){
+},{"../../../util":71}],43:[function(require,module,exports){
 (function (process){
 var _ = require('../../util')
 
@@ -12439,7 +12462,7 @@ module.exports = {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../util":70,"7YKIPe":5}],43:[function(require,module,exports){
+},{"../../util":71,"7YKIPe":6}],44:[function(require,module,exports){
 (function (process){
 if (process.env.NODE_ENV !== 'production') {
   module.exports = {
@@ -12453,7 +12476,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../../util":70,"7YKIPe":5}],44:[function(require,module,exports){
+},{"../../util":71,"7YKIPe":6}],45:[function(require,module,exports){
 var _ = require('../../util')
 var transition = require('../../transition')
 
@@ -12481,7 +12504,7 @@ module.exports = {
   }
 }
 
-},{"../../transition":63,"../../util":70}],45:[function(require,module,exports){
+},{"../../transition":64,"../../util":71}],46:[function(require,module,exports){
 var _ = require('../../util')
 
 module.exports = {
@@ -12497,7 +12520,7 @@ module.exports = {
   }
 }
 
-},{"../../util":70}],46:[function(require,module,exports){
+},{"../../util":71}],47:[function(require,module,exports){
 var _ = require('../util')
 var Path = require('../parsers/path')
 var toArray = require('../directives/public/for')._postProcess
@@ -12617,7 +12640,7 @@ function contains (val, search) {
   }
 }
 
-},{"../directives/public/for":33,"../parsers/path":60,"../util":70}],47:[function(require,module,exports){
+},{"../directives/public/for":34,"../parsers/path":61,"../util":71}],48:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -12737,7 +12760,7 @@ exports.debounce = function (handler, delay) {
 
 _.extend(exports, require('./array-filters'))
 
-},{"../util":70,"./array-filters":46}],48:[function(require,module,exports){
+},{"../util":71,"./array-filters":47}],49:[function(require,module,exports){
 var _ = require('../util')
 var compiler = require('../compiler')
 var templateParser = require('../parsers/template')
@@ -12795,7 +12818,7 @@ FragmentFactory.prototype.create = function (host, scope, parentFrag) {
 
 module.exports = FragmentFactory
 
-},{"../cache":14,"../compiler":17,"../parsers/template":61,"../util":70,"./fragment":49}],49:[function(require,module,exports){
+},{"../cache":15,"../compiler":18,"../parsers/template":62,"../util":71,"./fragment":50}],50:[function(require,module,exports){
 var _ = require('../util')
 var transition = require('../transition')
 
@@ -12983,7 +13006,7 @@ function detach (child) {
 
 module.exports = Fragment
 
-},{"../transition":63,"../util":70}],50:[function(require,module,exports){
+},{"../transition":64,"../util":71}],51:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var inDoc = _.inDoc
@@ -13150,7 +13173,7 @@ exports._callHook = function (hook) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../util":70,"7YKIPe":5}],51:[function(require,module,exports){
+},{"../util":71,"7YKIPe":6}],52:[function(require,module,exports){
 var mergeOptions = require('../util').mergeOptions
 var uid = 0
 
@@ -13264,7 +13287,7 @@ exports._init = function (options) {
   }
 }
 
-},{"../util":70}],52:[function(require,module,exports){
+},{"../util":71}],53:[function(require,module,exports){
 var _ = require('../util')
 var Directive = require('../directive')
 var compiler = require('../compiler')
@@ -13503,7 +13526,7 @@ exports._cleanup = function () {
   this.$off()
 }
 
-},{"../compiler":17,"../directive":20,"../util":70}],53:[function(require,module,exports){
+},{"../compiler":18,"../directive":21,"../util":71}],54:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 
@@ -13600,7 +13623,7 @@ exports._resolveComponent = function (id, cb) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../util":70,"7YKIPe":5}],54:[function(require,module,exports){
+},{"../util":71,"7YKIPe":6}],55:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var compiler = require('../compiler')
@@ -13845,7 +13868,7 @@ exports._initMeta = function () {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../compiler":17,"../observer":57,"../observer/dep":56,"../util":70,"../watcher":74,"7YKIPe":5}],55:[function(require,module,exports){
+},{"../compiler":18,"../observer":58,"../observer/dep":57,"../util":71,"../watcher":75,"7YKIPe":6}],56:[function(require,module,exports){
 var _ = require('../util')
 var arrayProto = Array.prototype
 var arrayMethods = Object.create(arrayProto)
@@ -13937,7 +13960,7 @@ _.define(
 
 module.exports = arrayMethods
 
-},{"../util":70}],56:[function(require,module,exports){
+},{"../util":71}],57:[function(require,module,exports){
 var _ = require('../util')
 var uid = 0
 
@@ -14000,7 +14023,7 @@ Dep.prototype.notify = function () {
 
 module.exports = Dep
 
-},{"../util":70}],57:[function(require,module,exports){
+},{"../util":71}],58:[function(require,module,exports){
 var _ = require('../util')
 var config = require('../config')
 var Dep = require('./dep')
@@ -14229,7 +14252,7 @@ _.defineReactive = defineReactive
 
 module.exports = Observer
 
-},{"../config":19,"../util":70,"./array":55,"./dep":56}],58:[function(require,module,exports){
+},{"../config":20,"../util":71,"./array":56,"./dep":57}],59:[function(require,module,exports){
 var _ = require('../util')
 var Cache = require('../cache')
 var cache = new Cache(1000)
@@ -14365,7 +14388,7 @@ exports.parse = function (s) {
   return dir
 }
 
-},{"../cache":14,"../util":70}],59:[function(require,module,exports){
+},{"../cache":15,"../util":71}],60:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var Path = require('./path')
@@ -14633,7 +14656,7 @@ exports.isSimplePath = function (exp) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../cache":14,"../util":70,"./path":60,"7YKIPe":5}],60:[function(require,module,exports){
+},{"../cache":15,"../util":71,"./path":61,"7YKIPe":6}],61:[function(require,module,exports){
 (function (process){
 var _ = require('../util')
 var Cache = require('../cache')
@@ -14995,7 +15018,7 @@ exports.set = function (obj, path, val) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../cache":14,"../util":70,"7YKIPe":5}],61:[function(require,module,exports){
+},{"../cache":15,"../util":71,"7YKIPe":6}],62:[function(require,module,exports){
 var _ = require('../util')
 var Cache = require('../cache')
 var templateCache = new Cache(1000)
@@ -15285,7 +15308,7 @@ exports.parse = function (template, clone, noSelector) {
     : frag
 }
 
-},{"../cache":14,"../util":70}],62:[function(require,module,exports){
+},{"../cache":15,"../util":71}],63:[function(require,module,exports){
 var Cache = require('../cache')
 var config = require('../config')
 var dirParser = require('./directive')
@@ -15447,7 +15470,7 @@ function inlineFilters (exp, single) {
   }
 }
 
-},{"../cache":14,"../config":19,"./directive":58}],63:[function(require,module,exports){
+},{"../cache":15,"../config":20,"./directive":59}],64:[function(require,module,exports){
 var _ = require('../util')
 
 /**
@@ -15528,7 +15551,7 @@ var apply = exports.apply = function (el, direction, op, vm, cb) {
   transition[action](op, cb)
 }
 
-},{"../util":70}],64:[function(require,module,exports){
+},{"../util":71}],65:[function(require,module,exports){
 var _ = require('../util')
 var queue = []
 var queued = false
@@ -15565,7 +15588,7 @@ function flush () {
   return f
 }
 
-},{"../util":70}],65:[function(require,module,exports){
+},{"../util":71}],66:[function(require,module,exports){
 var _ = require('../util')
 var queue = require('./queue')
 var addClass = _.addClass
@@ -15934,7 +15957,7 @@ function isHidden (el) {
 
 module.exports = Transition
 
-},{"../util":70,"./queue":64}],66:[function(require,module,exports){
+},{"../util":71,"./queue":65}],67:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 
@@ -16088,7 +16111,7 @@ function formatValue (val) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"./index":70,"7YKIPe":5}],67:[function(require,module,exports){
+},{"./index":71,"7YKIPe":6}],68:[function(require,module,exports){
 (function (process){
 /**
  * Enable debug utilities.
@@ -16139,7 +16162,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../config":19,"7YKIPe":5}],68:[function(require,module,exports){
+},{"../config":20,"7YKIPe":6}],69:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 var config = require('../config')
@@ -16506,7 +16529,7 @@ exports.removeNodeRange = function (start, end, vm, frag, cb) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../config":19,"../transition":63,"./index":70,"7YKIPe":5}],69:[function(require,module,exports){
+},{"../config":20,"../transition":64,"./index":71,"7YKIPe":6}],70:[function(require,module,exports){
 // can we use __proto__?
 exports.hasProto = '__proto__' in {}
 
@@ -16593,7 +16616,7 @@ exports.nextTick = (function () {
   }
 })()
 
-},{}],70:[function(require,module,exports){
+},{}],71:[function(require,module,exports){
 var lang = require('./lang')
 var extend = lang.extend
 
@@ -16604,7 +16627,7 @@ extend(exports, require('./options'))
 extend(exports, require('./component'))
 extend(exports, require('./debug'))
 
-},{"./component":66,"./debug":67,"./dom":68,"./env":69,"./lang":71,"./options":72}],71:[function(require,module,exports){
+},{"./component":67,"./debug":68,"./dom":69,"./env":70,"./lang":72,"./options":73}],72:[function(require,module,exports){
 /**
  * Set a property on an object. Adds the new property and
  * triggers change notification if the property doesn't
@@ -16996,7 +17019,7 @@ exports.looseEqual = function (a, b) {
   /* eslint-enable eqeqeq */
 }
 
-},{}],72:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 (function (process){
 var _ = require('./index')
 var config = require('../config')
@@ -17359,7 +17382,7 @@ exports.resolveAsset = function resolve (options, type, id) {
 }
 
 }).call(this,require("7YKIPe"))
-},{"../config":19,"./index":70,"7YKIPe":5}],73:[function(require,module,exports){
+},{"../config":20,"./index":71,"7YKIPe":6}],74:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var extend = _.extend
@@ -17459,7 +17482,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 }).call(this,require("7YKIPe"))
-},{"./api/data":8,"./api/dom":9,"./api/events":10,"./api/global":11,"./api/lifecycle":12,"./directives/element":21,"./directives/public":36,"./filters":47,"./instance/events":50,"./instance/init":51,"./instance/lifecycle":52,"./instance/misc":53,"./instance/state":54,"./util":70,"7YKIPe":5}],74:[function(require,module,exports){
+},{"./api/data":9,"./api/dom":10,"./api/events":11,"./api/global":12,"./api/lifecycle":13,"./directives/element":22,"./directives/public":37,"./filters":48,"./instance/events":51,"./instance/init":52,"./instance/lifecycle":53,"./instance/misc":54,"./instance/state":55,"./util":71,"7YKIPe":6}],75:[function(require,module,exports){
 (function (process){
 var _ = require('./util')
 var config = require('./config')
@@ -17799,7 +17822,7 @@ function traverse (val) {
 module.exports = Watcher
 
 }).call(this,require("7YKIPe"))
-},{"./batcher":13,"./config":19,"./observer/dep":56,"./parsers/expression":59,"./util":70,"7YKIPe":5}],75:[function(require,module,exports){
+},{"./batcher":14,"./config":20,"./observer/dep":57,"./parsers/expression":60,"./util":71,"7YKIPe":6}],76:[function(require,module,exports){
 var inserted = exports.cache = {}
 
 exports.insert = function (css) {
@@ -17819,4 +17842,4 @@ exports.insert = function (css) {
   return elem
 }
 
-},{}]},{},[3])
+},{}]},{},[4])
