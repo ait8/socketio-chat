@@ -89,17 +89,17 @@ var login = new Vue({
       if (name === '') {
         return;
       }
-      $.post("/users/" + name, function(data){
-        if (data.type === "error") {
-          $('.flash').html(data.msg).fadeIn(300);
-        } else {
+      $.post("/users/" + name)
+        .done(function(data){
           socket.emit('enter room', name);
           this.name = '';
           $('.enter-dialog').fadeOut(300);
           $('form#chatForm #m').focus();
           $('.flash').fadeOut(300);
-        }
-      });
+        }).fail(function(error){
+          console.log(error);
+          $('.flash').html(error.responseJSON.msg).fadeIn(300);
+        });
     }
   }
 });
@@ -170,7 +170,6 @@ socket.on('chat message', function(msg){
   if (bottoms) {
     Vue.nextTick(function(){
       $(window).scrollTop($('.messages')[0].scrollHeight);
-      console.log('scroll');
     });
   }
 });
