@@ -31,6 +31,7 @@ var LogSchema = new Schema({
   msg: String,
   tag: String,
   question: Boolean,
+  reply_to: String,
   date: Date
 });
 LogSchema.pre('save', function(next){
@@ -132,14 +133,13 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('chat message', function(msg){
+  socket.on('chat message', function(message){
     var msgClass = "msg", question = false;
-
-    if (msg === '') {
+    if (message.msg === '') {
       socket.emit('system', "メッセージに空白は利用できません");
       return;
     } else {
-      if (msg.match(/質問|question/i)) {
+      if (message.msg.match(/質問|question/i)) {
         question = true;
         msgClass = "msg question";
       }
@@ -152,7 +152,7 @@ io.on('connection', function(socket){
       } else if (result === null){
         socket.emit('system', "おっと、チャットルームに入室できていないかもしれません。ページをリロードしてみてください。");
       } else {
-        var newLog = new Log({name: result.name, msg: msg, tag: msgClass, question: question});
+        var newLog = new Log({name: result.name, msg: message.msg, tag: msgClass, question: question, reply_to: message.reply_to});
         newLog.save(function(){
           io.emit('chat message', newLog);
         });

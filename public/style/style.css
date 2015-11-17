@@ -26,7 +26,7 @@ html, body {
 }
 
 #chatForm {
-  height: 42px;
+  height: auto;
   border-radius: 2px;
   z-index: 99;
   background: #FFF;
@@ -72,6 +72,19 @@ html, body {
   vertical-align: middle;
 }
 
+.messages li a.reply {
+  font-weight: normal;
+  font-size: 0.7rem;
+  padding-left: 5px;
+  /* color: #afbccd; */
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.messages li.reply-mode {
+  background: #C5EFF7;
+}
+
 .messages li p.msg {
   font-size: 1rem;
   display: inline-block;
@@ -112,7 +125,10 @@ html, body {
 
 .tool-box .num{
   display: block;
-  font-size: 0.3rem;
+}
+
+.tool-box div{
+  margin: 6px;
 }
 
 .btn-circle {
@@ -120,7 +136,13 @@ html, body {
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  margin: 6px;
+  vertical-align: middle;
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.btn-circle span {
 }
 
 .tool-box .btn {

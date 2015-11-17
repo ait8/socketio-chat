@@ -2,12 +2,13 @@
 
 <div class="tool-box">
   <div>
-    <button class="btn btn-circle btn-user">
+    <a class="btn btn-circle btn-user" tabindex="0" >
       <span class="glyphicon glyphicon-user"></span>
-      <span class="num"></span></button>
+      <span class="num"></span></a>
   </div>
   <div>
-    <button class="btn btn-circle btn-question"><span class="glyphicon glyphicon-question-sign"></span></button>
+    <a class="btn btn-circle btn-question" tabindex="0" >
+      <span class="glyphicon glyphicon-question-sign"></span></a>
   </div>
 </div>
 
@@ -28,15 +29,14 @@
   <div class="row">
     <div class="col-xs-12">
       <ul class="messages">
-        <li v-for="log in logs" id="{{log._id}}" transition="message">
-          <span class="name">
-            {{log.name}}
-            <span class="time">
-              {{log.date | time-format}}
-            </span>
-          </span>
-          <p class="{{log.tag}}">{{log.msg}}</p>
-        </li>
+        <log v-for="log in logs"
+             :_id="log._id"
+             :name="log.name"
+             :date="log.date"
+             :tag="log.tag"
+             :msg="log.msg"
+             :reply_to="log.reply_to"
+        ></log>
       </ul>
     </div>
   </div>

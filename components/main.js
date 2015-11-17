@@ -1,12 +1,14 @@
-var socket = io();
-var member_html = '<span></span>';
-var question_list = [];
+var Log = require('./Log.vue');
+
+// var socket = io();
+var socket = require('./socket.js');
 
 $('form#enterForm #name').focus();
 
 Vue.filter('time-format', function(date) {
-  return new Intl.DateTimeFormat('ja-JP-u-ca-japanese', {hour: 'numeric', minute: 'numeric', second: 'numeric'})
-    .format(new Date(date));;
+  var pad = function(num){return ('0' + num).slice( -2 );};
+  var d = new Date(date);
+  return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
 });
 
 var login = new Vue({
@@ -35,12 +37,6 @@ var login = new Vue({
   }
 });
 
-var chatLogs = new Vue({
-  el: '#message-box',
-  data: {
-    logs: []
-  }});
-
 var chatForm = new Vue({
   el: '#chatForm',
   data: {
@@ -48,10 +44,20 @@ var chatForm = new Vue({
   },
   methods: {
     onSubmit: function(){
-      socket.emit('chat message', this.content);
+      socket.emit('chat message', {reply_to: '', msg: this.content});
       this.content = '';
       $('#m').focus();
     }
+  }
+});
+
+var chatLogs = new Vue({
+  el: '#message-box',
+  data: {
+    logs: []
+  },
+  components: {
+    'log' : Log
   }
 });
 
@@ -81,23 +87,22 @@ socket.on('chat logs', function(msg){
     insertMessage(msg[i]);
   }
   Vue.nextTick(function(){
-    $('body').scrollTop($('.messages')[0].scrollHeight);
+    $(window).scrollTop($('.messages')[0].scrollHeight);
   });
 });
 
 socket.on('chat message', function(msg){
   var bottoms = false;
   if ($('#message-box').height() <=
-      $('body').scrollTop() + $('body').height()){
+      $(window).scrollTop() + $(window).height()){
         // || $('.readonly').length === 1) {
     bottoms = true;
   }
 
   insertMessage(msg);
-
   if (bottoms) {
     Vue.nextTick(function(){
-      $('body').scrollTop($('.messages')[0].scrollHeight);
+      $(window).scrollTop($('.messages')[0].scrollHeight);
     });
   }
 });

@@ -1,2 +1,18 @@
 <% extend 'layout.ect' %>
-<ul class="messages" id="readonly"></ul>
+
+<div id="message-box" class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <ul class="messages" id="readonly">
+        <log v-for="log in logs"
+             :_id="log._id"
+             :name="log.name"
+             :date="log.date"
+             :tag="log.tag"
+             :msg="log.msg"
+             :reply_to="log.reply_to"
+        ></log>
+      </ul>
+    </div>
+  </div>
+</div>
