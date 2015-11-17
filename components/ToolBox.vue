@@ -1,4 +1,73 @@
 <style>
+ .tool-box {
+   padding: 10px;
+   position: fixed;
+   right: 0;
+   z-index: 1009;
+   vertical-align: middle;
+ }
+
+ .tool-box .num{
+   display: block;
+ }
+
+ .tool-box div{
+   margin: 6px;
+ }
+
+ .btn-circle {
+   position: relative;
+   width: 60px;
+   height: 60px;
+   border-radius: 50%;
+   vertical-align: middle;
+   display: table-cell;
+   text-align: center;
+   vertical-align: middle;
+ }
+
+ .btn-circle span {
+ }
+
+ .tool-box .btn {
+   background: #FFF;
+   box-shadow:rgba(113, 135, 164, 0.25) 0px 0px 3px 2px;
+   outline: none;
+ }
+
+ .btn-user {
+   background: #FFF;
+   color: #89C4F4;
+ }
+
+ .btn-user:hover {
+   color: #FFF;
+   background: #89C4F4;
+ }
+
+ .btn-question {
+   background: #FFF;
+   color: #CF000F;
+ }
+
+ .btn-question:hover {
+   color: #FFF;
+   background: #CF000F;
+ }
+
+ .member {
+   padding: 1px;
+ }
+
+ .member:before {
+   color: #87D37C;
+   content: "●";
+   padding-right: 5px;
+ }
+
+ .questions {
+   display: block;
+ }
  .btn-realtime {
    background: #FFF;
    color: #F9690E;
