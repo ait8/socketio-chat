@@ -2,18 +2,7 @@
 
 <toolbox :readonly="false"></toolbox>
 
-<form id="enterForm" class="enter-dialog" v-on:submit.prevent="onSubmit">
-  <div class="form-group">
-    <label for="name">あなたの名前</label>
-    <input id="name" type="text" class="form-control" autocomplete="off"
-           placeholder="あなたの名前" v-model="name" />
-  </div>
-  <div class="form-group">
-    <button class="btn btn-block btn-success">入室</button>
-  </div>
-</form>
-
-<div class="enter-dialog" id="layer"></div>
+<login></login>
 
 <div id="message-box" class="container-fluid">
   <div class="row">
@@ -32,16 +21,4 @@
   </div>
 </div>
 
-<form action="" id="chatForm" v-on:submit.prevent="onSubmit">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="form-group col-md-11 col-xs-8">
-        <input id="m" autocomplete="off" class="form-control"
-               placeholder="メッセージを入力して下さい" v-model="content"/>
-      </div>
-      <div class="form-group col-md-1 col-xs-4">
-        <button class="btn btn-block btn-success">Send</button>
-      </div>
-    </div>
-  </div>
-</form>
+<inputbox></inputbox>

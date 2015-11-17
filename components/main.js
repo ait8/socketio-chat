@@ -1,13 +1,15 @@
 var Log = require('./Log.vue'),
-    ToolBox = require('./ToolBox.vue');
+    ToolBox = require('./ToolBox.vue'),
+    Login = require('./Login.vue'),
+    InputBox = require('./InputBox');
 
 Vue.component('log', Log);
 Vue.component('toolbox', ToolBox);
+Vue.component('login', Login);
+Vue.component('inputbox', InputBox);
 
 // var socket = io();
 var socket = require('./socket.js');
-
-$('form#enterForm #name').focus();
 
 Vue.filter('time-format', function(date) {
   var pad = function(num){return ('0' + num).slice( -2 );};
@@ -15,49 +17,16 @@ Vue.filter('time-format', function(date) {
   return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
 });
 
-var login = new Vue({
-  el: '#enterForm',
-  data: {
-    name: $.cookie('name')
-  },
-  methods: {
-    onSubmit: function() {
-      var name = this.name;
-      if (name === '') {
-        return;
-      }
-      $.post("/users/" + name)
-        .done(function(data){
-          socket.emit('enter room', name);
-          this.name = '';
-          $('.enter-dialog').fadeOut(300);
-          $('form#chatForm #m').focus();
-          $('.flash').fadeOut(300);
-        }).fail(function(error){
-          $('.flash').html(error.responseJSON.msg).fadeIn(300);
-        });
-    }
-  }
-});
-
-var chatForm = new Vue({
-  el: '#chatForm',
-  data: {
-    content: ''
-  },
-  methods: {
-    onSubmit: function(){
-      socket.emit('chat message', {reply_to: '', msg: this.content});
-      this.content = '';
-      $('#m').focus();
-    }
-  }
-});
-
 var chatLogs = new Vue({
   el: '#message-box',
   data: {
-    logs: []
+    logs: [],
+    readonly: false
+  },
+  created: function(){
+    if ($('#readonly').length !== 0) {
+      this.readonly = true;
+    }
   },
   components: {
     'log' : Log
