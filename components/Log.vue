@@ -43,7 +43,7 @@
       <span class="time">
         {{date | time-format}}
       </span>
-      <a v-if="readonly" v-show="menu" class="reply" @click="reply">{{reply_text}}</a>
+      <a v-if="!readonly" v-show="menu" class="reply" @click="reply">{{reply_text}}</a>
     </span>
     <p class="{{tag}}"><a class="reply-link" href="#{{reply_to}}" v-if="reply_to" @click="replyHighlight"><span class="glyphicon glyphicon-share-alt"></span>返信</a>{{msg}}</p>
   </li>
@@ -59,8 +59,7 @@
 <script>
  module.exports = {
    name: 'Log',
-   inherit: true,
-   props: ['_id', 'name', 'date', 'tag', 'msg', 'reply_to'],
+   props: ['_id', 'name', 'date', 'tag', 'msg', 'reply_to', 'readonly'],
    data: function(){
      return {
        menu: false,
