@@ -18,5 +18,12 @@ Then, exec these commands.
 
 ```
 % npm install
+% bower install
 % node index.js
+```
+
+For developers
+
+```
+% gulp
 ```
