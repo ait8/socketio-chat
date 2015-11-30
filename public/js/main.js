@@ -260,17 +260,12 @@ Vue.filter('time-format', function(date) {
 var chatLogs = new Vue({
   el: '#message-box',
   data: {
-    logs: [],
-    readonly: false
+    logs: []
   },
   components: {
     'log' : Log
   }
 });
-
-if ($('#readonly').length !== 0) {
-  chatLogs.readonly = true;
-}
 
 var insertMessage = function(msg){
   chatLogs.$data.logs.push(msg);
