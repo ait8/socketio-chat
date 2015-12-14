@@ -76,6 +76,18 @@ app.post('/users/:name', function(req, res){
   });
 });
 
+app.get('/messages/:id', function(req, res){
+  var _id = req.params.id;
+  var logquery = Log.where({});
+  logquery.findOne({_id: _id}, null).lean().exec(function(err, result){
+    if (err) {
+      res.status(400).json({type: "error", msg: "メッセージが存在しません"});
+    } else {
+      res.status(200).json(result);
+    }
+  });
+});
+
 var updateMemberList = function(socket, io){
   var listquery = User.where({}).select('name');
   listquery.find().lean().exec(function(err, result){
