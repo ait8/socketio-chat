@@ -34,6 +34,28 @@
  .reply-link:after {
    content: '：';
  }
+
+ .reply-tooltip {
+   position: absolute;
+   top: -3.0em;
+   left: 1.0em;
+   z-index: 9999;
+   padding: 0.3em 0.5em;
+   color: #34495E;
+   background: #C5EFF7;
+   border-radius: 0.5em;
+   white-space: nowrap;
+ }
+ .reply-tooltip:after {
+   width: 100%;
+   content: "";
+   display: block;
+   position: absolute;
+   left: 0.5em;
+   bottom: -8px;
+   border-bottom:8px solid transparent;
+   border-left:8px solid #C5EFF7;
+ }
 </style>
 
 <template>
@@ -45,7 +67,7 @@
       </span>
       <a v-if="!readonly" v-show="menu" class="reply" @click="reply">{{reply_text}}</a>
     </span>
-    <p class="{{tag}}"><a class="reply-link" href="#{{reply_to}}" v-if="reply_to" @click="replyHighlight"><span class="glyphicon glyphicon-share-alt"></span>返信</a>{{msg}}</p>
+    <p class="{{tag}}"><a class="reply-link" href="#{{reply_to}}" v-if="reply_to" @click="replyHighlight" @mouseenter="showReplyPopup" @mouseleave="hideReplyPopup"><span class="glyphicon glyphicon-share-alt"></span>返信</a>{{msg}}</p>
   </li>
   <form v-if="reply_show" v-on:submit.prevent="onReply" class="form-inline">
     <div class="form-group">
@@ -99,6 +121,14 @@
        setTimeout(function(){
          $('#'+that.reply_to).removeClass('reply-highlight', {duration: 400});
        }, 400);
+     },
+     showReplyPopup: function(e) {
+       $.get('http://localhost:3000/messages/'+this.reply_to, function(d) {
+         $(e.target).append('<div class="reply-tooltip">'+d.name+'：'+d.msg+'</div>');
+       });
+     },
+     hideReplyPopup: function(e) {
+       $(e.target).find('.reply-tooltip').remove();
      }
    }
  }
