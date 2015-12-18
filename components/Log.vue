@@ -123,7 +123,7 @@
        }, 400);
      },
      showReplyPopup: function(e) {
-       $.get('http://localhost:3000/messages/'+this.reply_to, function(d) {
+       $.get('/messages/'+this.reply_to, function(d) {
          $(e.target).append('<div class="reply-tooltip">'+d.name+'：'+d.msg+'</div>');
        });
      },
