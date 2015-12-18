@@ -58,6 +58,10 @@ html, body {
   vertical-align: middle;
 }
 
+.messages li a.reply-link {
+  position: relative;
+}
+
 .messages li.reply-mode {
   background: #C5EFF7;
 }
