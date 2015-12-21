@@ -11,6 +11,11 @@
    height: auto;
    left: calc(50% - 100px);
  }
+ .notice {
+   color: #F64747;
+   font-size: 50%;
+   font-weight: bold;
+ }
 </style>
 
 <template>
@@ -19,6 +24,7 @@
       <label for="name">あなたの名前</label>
       <input id="name" type="text" class="form-control" autocomplete="off"
              placeholder="あなたの名前" v-model="name" />
+      <span class="notice">※他人がわかる名前で入室してください</span>
     </div>
     <div class="form-group">
       <button class="btn btn-block btn-success">入室</button>

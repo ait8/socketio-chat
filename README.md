@@ -19,6 +19,7 @@ Then, exec these commands.
 ```
 % npm install
 % bower install
+% npm run build
 % node index.js
 ```
 
