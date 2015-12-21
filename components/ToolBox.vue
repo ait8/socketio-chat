@@ -128,8 +128,14 @@
        that.members = msg;
      });
 
+     var today = new Date();
+     today.setHours(0);
+     today.setMinutes(0);
+     today.setSeconds(0);
+     today.setMilliseconds(0);
      var insertQuestion = function(msg){
-       if (msg.question) {
+       var msgdate = new Date(msg.date);
+       if (msg.question && msgdate > today) {
          that.questions.push({id: msg._id, content: msg.msg.substr(0, 15) + '……'});
        }
      };
