@@ -1,7 +1,7 @@
 var Log = require('./Log.vue'),
     ToolBox = require('./ToolBox.vue'),
     Login = require('./Login.vue'),
-    InputBox = require('./InputBox');
+    InputBox = require('./InputBox.vue');
 
 Vue.component('log', Log);
 Vue.component('toolbox', ToolBox);
