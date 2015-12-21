@@ -69,6 +69,8 @@ html, body {
 .messages li p.msg {
   font-size: 1rem;
   display: inline-block;
+  width: 100%;
+  word-wrap: break-word;
 }
 
 .messages li p.question {
