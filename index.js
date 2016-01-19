@@ -105,7 +105,7 @@ var checkMemberList = function(socket, io) {
   for(var key in socket.adapter.rooms) {
     onlines.push(key);
   }
-  var listquery = User.find({'socketid': {$nin:[onlines]}});
+  var listquery = User.find({'socketid': {$nin:onlines}});
   listquery.remove().lean().exec(function(err, result){
   });
 };
