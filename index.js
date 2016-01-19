@@ -89,6 +89,7 @@ app.get('/messages/:id', function(req, res){
 });
 
 var updateMemberList = function(socket, io){
+  checkMemberList(socket, io);
   var listquery = User.where({}).select('name');
   listquery.find().lean().exec(function(err, result){
     if (err) {
@@ -96,6 +97,16 @@ var updateMemberList = function(socket, io){
     } else {
       io.emit('member list', result);
     }
+  });
+};
+
+var checkMemberList = function(socket, io) {
+  var onlines = [];
+  for(var key in socket.adapter.rooms) {
+    onlines.push(key);
+  }
+  var listquery = User.find({'socketid': {$nin:[onlines]}});
+  listquery.remove().lean().exec(function(err, result){
   });
 };
 
