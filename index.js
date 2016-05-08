@@ -2,17 +2,19 @@ var express = require('express'),
     app = express(),
     http = require('http').Server(app),
     io = require('socket.io')(http);
+var path = require('path');
 
 var CookieParser = require('cookie-parser');
 var ECT = require('ect');
 var ectRenderer = ECT({ watch: true, root: __dirname + '/views', ext : '.ect' });
 var validator = require('validator');
 
-app.use(express.static('public'));
-app.use(express.static('lib'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'lib')));
 app.use(CookieParser());
 app.engine('ect', ectRenderer.render);
 app.set('view engine', 'ect');
+app.set('views', path.join(__dirname, 'views'));
 
 var async = require('async');
 
